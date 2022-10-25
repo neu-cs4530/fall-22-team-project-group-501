@@ -58,7 +58,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
   const { localTracks } = useVideoContext();
 
   const videoTrack = localTracks.find(
-    track => !track.name.includes('screen') && track.kind === 'video'
+    track => !track.name.includes('screen') && track.kind === 'video',
   ) as LocalVideoTrack;
 
   return (
@@ -76,7 +76,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
       <div className={classes.identityContainer}>
         <span className={classes.identity}>
           <LocalAudioLevelIndicator />
-          <Typography variant="body1" color="inherit" component="span">
+          <Typography variant='body1' color='inherit' component='span'>
             {identity}
           </Typography>
         </span>

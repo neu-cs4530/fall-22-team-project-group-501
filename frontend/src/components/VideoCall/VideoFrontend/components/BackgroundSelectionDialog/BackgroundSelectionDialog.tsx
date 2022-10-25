@@ -29,8 +29,8 @@ function BackgroundSelectionDialog() {
 
   return (
     <Drawer
-      variant="persistent"
-      anchor="right"
+      variant='persistent'
+      anchor='right'
       open={isBackgroundSelectionOpen}
       transitionDuration={0}
       classes={{

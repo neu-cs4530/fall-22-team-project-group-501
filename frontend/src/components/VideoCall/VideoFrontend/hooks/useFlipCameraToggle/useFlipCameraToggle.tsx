@@ -8,9 +8,9 @@ import useVideoContext from '../useVideoContext/useVideoContext';
 export default function useFlipCameraToggle() {
   const { localTracks } = useVideoContext();
   const [supportsFacingMode, setSupportsFacingMode] = useState(false);
-  const videoTrack = localTracks.find(track => !track.name.includes('screen') && track.kind === 'video') as
-    | LocalVideoTrack
-    | undefined;
+  const videoTrack = localTracks.find(
+    track => !track.name.includes('screen') && track.kind === 'video',
+  ) as LocalVideoTrack | undefined;
   const mediaStreamTrack = useMediaStreamTrack(videoTrack);
   const { videoInputDevices } = useDevices();
 
@@ -27,7 +27,8 @@ export default function useFlipCameraToggle() {
   }, [mediaStreamTrack, supportsFacingMode]);
 
   const toggleFacingMode = useCallback(() => {
-    const newFacingMode = mediaStreamTrack?.getSettings().facingMode === 'user' ? 'environment' : 'user';
+    const newFacingMode =
+      mediaStreamTrack?.getSettings().facingMode === 'user' ? 'environment' : 'user';
     videoTrack?.restart({
       ...(DEFAULT_VIDEO_CONSTRAINTS as {}),
       facingMode: newFacingMode,

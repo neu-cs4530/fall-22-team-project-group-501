@@ -36,9 +36,9 @@ function addLinks(text: string) {
   matches.forEach((match, i) => {
     results.push(text.slice(lastIndex, match.index));
     results.push(
-      <Link target="_blank" rel="noreferrer" href={match.url} key={i}>
+      <Link target='_blank' rel='noreferrer' href={match.url} key={i}>
         {match.text}
-      </Link>
+      </Link>,
     );
     lastIndex = match.lastIndex;
   });

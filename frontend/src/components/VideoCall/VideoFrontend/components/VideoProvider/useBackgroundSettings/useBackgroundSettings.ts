@@ -129,7 +129,10 @@ const virtualBackgroundAssets = '/virtualbackground';
 let blurProcessor: GaussianBlurBackgroundProcessor;
 let virtualBackgroundProcessor: VirtualBackgroundProcessor;
 
-export default function useBackgroundSettings(videoTrack: LocalVideoTrack | undefined, room?: Room | null) {
+export default function useBackgroundSettings(
+  videoTrack: LocalVideoTrack | undefined,
+  room?: Room | null,
+) {
   const [backgroundSettings, setBackgroundSettings] = useState<BackgroundSettings>(() => {
     const localStorageSettings = window.localStorage.getItem(SELECTED_BACKGROUND_SETTINGS_KEY);
     return localStorageSettings ? JSON.parse(localStorageSettings) : { type: 'none', index: 0 };
@@ -149,7 +152,7 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
       removeProcessor();
       videoTrack.addProcessor(processor);
     },
-    [videoTrack, removeProcessor]
+    [videoTrack, removeProcessor],
   );
 
   useEffect(() => {
@@ -179,7 +182,10 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
 
       if (backgroundSettings.type === 'blur') {
         addProcessor(blurProcessor);
-      } else if (backgroundSettings.type === 'image' && typeof backgroundSettings.index === 'number') {
+      } else if (
+        backgroundSettings.type === 'image' &&
+        typeof backgroundSettings.index === 'number'
+      ) {
         virtualBackgroundProcessor.backgroundImage = await getImage(backgroundSettings.index);
         addProcessor(virtualBackgroundProcessor);
       } else {
@@ -187,7 +193,10 @@ export default function useBackgroundSettings(videoTrack: LocalVideoTrack | unde
       }
     };
     handleProcessorChange();
-    window.localStorage.setItem(SELECTED_BACKGROUND_SETTINGS_KEY, JSON.stringify(backgroundSettings));
+    window.localStorage.setItem(
+      SELECTED_BACKGROUND_SETTINGS_KEY,
+      JSON.stringify(backgroundSettings),
+    );
   }, [backgroundSettings, videoTrack, room, addProcessor, removeProcessor]);
 
   return [backgroundSettings, setBackgroundSettings] as const;

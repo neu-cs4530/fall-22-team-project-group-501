@@ -14,7 +14,7 @@ export default function useActiveSinkId() {
   useEffect(() => {
     const selectedSinkId = window.localStorage.getItem(SELECTED_AUDIO_OUTPUT_KEY);
     const hasSelectedAudioOutputDevice = audioOutputDevices.some(
-      device => selectedSinkId && device.deviceId === selectedSinkId
+      device => selectedSinkId && device.deviceId === selectedSinkId,
     );
     if (hasSelectedAudioOutputDevice) {
       _setActiveSinkId(selectedSinkId!);

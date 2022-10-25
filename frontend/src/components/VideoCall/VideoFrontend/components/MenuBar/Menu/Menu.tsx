@@ -9,7 +9,15 @@ import StartRecordingIcon from '../../../icons/StartRecordingIcon';
 import StopRecordingIcon from '../../../icons/StopRecordingIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsIcon from '../../../icons/SettingsIcon';
-import { Button, styled, Theme, useMediaQuery, Menu as MenuContainer, MenuItem, Typography } from '@material-ui/core';
+import {
+  Button,
+  styled,
+  Theme,
+  useMediaQuery,
+  Menu as MenuContainer,
+  MenuItem,
+  Typography,
+} from '@material-ui/core';
 import { isSupported } from '@twilio/video-processors';
 
 import { useAppState } from '../../../state';
@@ -76,7 +84,7 @@ export default function Menu(props: { buttonClassName?: string }) {
           <IconContainer>
             <SettingsIcon />
           </IconContainer>
-          <Typography variant="body1">Audio and Video Settings</Typography>
+          <Typography variant='body1'>Audio and Video Settings</Typography>
         </MenuItem>
 
         {isSupported && (
@@ -90,7 +98,7 @@ export default function Menu(props: { buttonClassName?: string }) {
             <IconContainer>
               <BackgroundIcon />
             </IconContainer>
-            <Typography variant="body1">Backgrounds</Typography>
+            <Typography variant='body1'>Backgrounds</Typography>
           </MenuItem>
         )}
 
@@ -99,7 +107,7 @@ export default function Menu(props: { buttonClassName?: string }) {
             <IconContainer>
               <FlipCameraIcon />
             </IconContainer>
-            <Typography variant="body1">Flip Camera</Typography>
+            <Typography variant='body1'>Flip Camera</Typography>
           </MenuItem>
         )}
 
@@ -116,8 +124,10 @@ export default function Menu(props: { buttonClassName?: string }) {
             }}
             data-cy-recording-button
           >
-            <IconContainer>{isRecording ? <StopRecordingIcon /> : <StartRecordingIcon />}</IconContainer>
-            <Typography variant="body1">{isRecording ? 'Stop' : 'Start'} Recording</Typography>
+            <IconContainer>
+              {isRecording ? <StopRecordingIcon /> : <StartRecordingIcon />}
+            </IconContainer>
+            <Typography variant='body1'>{isRecording ? 'Stop' : 'Start'} Recording</Typography>
           </MenuItem>
         )}
 
@@ -130,14 +140,14 @@ export default function Menu(props: { buttonClassName?: string }) {
           <IconContainer>
             <SearchIcon style={{ fill: '#707578', width: '0.9em' }} />
           </IconContainer>
-          <Typography variant="body1">Room Monitor</Typography>
+          <Typography variant='body1'>Room Monitor</Typography>
         </MenuItem>
 
         <MenuItem onClick={() => setAboutOpen(true)}>
           <IconContainer>
             <InfoIconOutlined />
           </IconContainer>
-          <Typography variant="body1">About</Typography>
+          <Typography variant='body1'>About</Typography>
         </MenuItem>
       </MenuContainer>
       <AboutDialog

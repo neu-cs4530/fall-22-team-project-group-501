@@ -17,50 +17,50 @@ interface BackgroundThumbnailProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     thumbContainer: {
-      margin: '5px',
-      width: 'calc(50% - 10px)',
-      display: 'flex',
-      position: 'relative',
+      'margin': '5px',
+      'width': 'calc(50% - 10px)',
+      'display': 'flex',
+      'position': 'relative',
       '&::after': {
         content: '""',
         paddingBottom: '55.5%',
       },
     },
     thumbIconContainer: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: '10px',
-      border: `solid ${theme.palette.grey[400]}`,
+      'width': '100%',
+      'display': 'flex',
+      'justifyContent': 'center',
+      'alignItems': 'center',
+      'borderRadius': '10px',
+      'border': `solid ${theme.palette.grey[400]}`,
       '&.selected': {
-        border: `solid ${theme.palette.primary.main}`,
+        'border': `solid ${theme.palette.primary.main}`,
         '& svg': {
           color: `${theme.palette.primary.main}`,
         },
       },
     },
     thumbIcon: {
-      height: 50,
-      width: 50,
-      color: `${theme.palette.grey[400]}`,
+      'height': 50,
+      'width': 50,
+      'color': `${theme.palette.grey[400]}`,
       '&.selected': {
         color: `${theme.palette.primary.main}`,
       },
     },
     thumbImage: {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      objectFit: 'cover',
-      borderRadius: '10px',
-      border: `solid ${theme.palette.grey[400]}`,
+      'width': '100%',
+      'height': '100%',
+      'position': 'absolute',
+      'top': 0,
+      'bottom': 0,
+      'left': 0,
+      'right': 0,
+      'objectFit': 'cover',
+      'borderRadius': '10px',
+      'border': `solid ${theme.palette.grey[400]}`,
       '&:hover': {
-        cursor: 'pointer',
+        'cursor': 'pointer',
         '& svg': {
           color: `${theme.palette.primary.main}`,
         },
@@ -69,33 +69,38 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
       '&.selected': {
-        border: `solid ${theme.palette.primary.main}`,
+        'border': `solid ${theme.palette.primary.main}`,
         '& svg': {
           color: `${theme.palette.primary.main}`,
         },
       },
     },
     thumbOverlay: {
-      position: 'absolute',
-      color: 'transparent',
-      padding: '20px',
-      fontSize: '14px',
-      fontWeight: 'bold',
-      width: '100%',
-      height: '100%',
-      borderRadius: '10px',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      'position': 'absolute',
+      'color': 'transparent',
+      'padding': '20px',
+      'fontSize': '14px',
+      'fontWeight': 'bold',
+      'width': '100%',
+      'height': '100%',
+      'borderRadius': '10px',
+      'display': 'flex',
+      'justifyContent': 'center',
+      'alignItems': 'center',
       '&:hover': {
         background: 'rgba(95, 93, 128, 0.6)',
         color: 'white',
       },
     },
-  })
+  }),
 );
 
-export default function BackgroundThumbnail({ thumbnail, imagePath, name, index }: BackgroundThumbnailProps) {
+export default function BackgroundThumbnail({
+  thumbnail,
+  imagePath,
+  name,
+  index,
+}: BackgroundThumbnailProps) {
   const classes = useStyles();
   const { backgroundSettings, setBackgroundSettings } = useVideoContext();
   const isImage = thumbnail === 'image';
@@ -124,7 +129,11 @@ export default function BackgroundThumbnail({ thumbnail, imagePath, name, index 
           <ThumbnailIcon className={classes.thumbIcon} />
         </div>
       ) : (
-        <img className={clsx(classes.thumbImage, { selected: thumbnailSelected })} src={imagePath} alt={name} />
+        <img
+          className={clsx(classes.thumbImage, { selected: thumbnailSelected })}
+          src={imagePath}
+          alt={name}
+        />
       )}
       <div className={classes.thumbOverlay}>{name}</div>
     </div>

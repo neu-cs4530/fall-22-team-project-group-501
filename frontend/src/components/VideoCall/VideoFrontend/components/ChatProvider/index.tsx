@@ -62,7 +62,8 @@ export const ChatProvider: React.FC = ({ children }) => {
         hasUnreadMessages,
         messages,
         conversation,
-      }}>
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );

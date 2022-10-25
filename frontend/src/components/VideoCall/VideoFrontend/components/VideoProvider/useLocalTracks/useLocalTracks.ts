@@ -1,4 +1,8 @@
-import { DEFAULT_VIDEO_CONSTRAINTS, SELECTED_AUDIO_INPUT_KEY, SELECTED_VIDEO_INPUT_KEY } from '../../../constants';
+import {
+  DEFAULT_VIDEO_CONSTRAINTS,
+  SELECTED_AUDIO_INPUT_KEY,
+  SELECTED_VIDEO_INPUT_KEY,
+} from '../../../constants';
 import { getDeviceInfo, isPermissionDenied } from '../../../utils';
 import { useCallback, useState } from 'react';
 import Video, { LocalVideoTrack, LocalAudioTrack, CreateLocalTrackOptions } from 'twilio-video';
@@ -27,7 +31,7 @@ export default function useLocalTracks() {
     const { videoInputDevices } = await getDeviceInfo();
 
     const hasSelectedVideoDevice = videoInputDevices.some(
-      device => selectedVideoDeviceId && device.deviceId === selectedVideoDeviceId
+      device => selectedVideoDeviceId && device.deviceId === selectedVideoDeviceId,
     );
 
     const options: CreateLocalTrackOptions = {
@@ -57,7 +61,8 @@ export default function useLocalTracks() {
   }, [videoTrack]);
 
   const getAudioAndVideoTracks = useCallback(async () => {
-    const { audioInputDevices, videoInputDevices, hasAudioInputDevices, hasVideoInputDevices } = await getDeviceInfo();
+    const { audioInputDevices, videoInputDevices, hasAudioInputDevices, hasVideoInputDevices } =
+      await getDeviceInfo();
 
     if (!hasAudioInputDevices && !hasVideoInputDevices) return Promise.resolve();
     if (isAcquiringLocalTracks || audioTrack || videoTrack) return Promise.resolve();
@@ -68,10 +73,10 @@ export default function useLocalTracks() {
     const selectedVideoDeviceId = window.localStorage.getItem(SELECTED_VIDEO_INPUT_KEY);
 
     const hasSelectedAudioDevice = audioInputDevices.some(
-      device => selectedAudioDeviceId && device.deviceId === selectedAudioDeviceId
+      device => selectedAudioDeviceId && device.deviceId === selectedAudioDeviceId,
     );
     const hasSelectedVideoDevice = videoInputDevices.some(
-      device => selectedVideoDeviceId && device.deviceId === selectedVideoDeviceId
+      device => selectedVideoDeviceId && device.deviceId === selectedVideoDeviceId,
     );
 
     // In Chrome, it is possible to deny permissions to only audio or only video.
@@ -90,7 +95,9 @@ export default function useLocalTracks() {
       },
       audio:
         shouldAcquireAudio &&
-        (hasSelectedAudioDevice ? { deviceId: { exact: selectedAudioDeviceId! } } : hasAudioInputDevices),
+        (hasSelectedAudioDevice
+          ? { deviceId: { exact: selectedAudioDeviceId! } }
+          : hasAudioInputDevices),
     };
 
     return Video.createLocalTracks(localTrackConstraints)
@@ -103,7 +110,7 @@ export default function useLocalTracks() {
           // in cases where the user's video is disabled.
           window.localStorage.setItem(
             SELECTED_VIDEO_INPUT_KEY,
-            newVideoTrack.mediaStreamTrack.getSettings().deviceId ?? ''
+            newVideoTrack.mediaStreamTrack.getSettings().deviceId ?? '',
           );
         }
         if (newAudioTrack) {

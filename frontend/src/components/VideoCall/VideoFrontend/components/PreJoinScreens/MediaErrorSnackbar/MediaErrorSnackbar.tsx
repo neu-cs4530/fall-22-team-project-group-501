@@ -83,7 +83,11 @@ export default function MediaErrorSnackbar({ error }: { error?: Error }) {
     !isAcquiringLocalTracks &&
     (Boolean(error) || !hasAudioInputDevices || !hasVideoInputDevices);
 
-  const { headline, message } = getSnackbarContent(hasAudioInputDevices, hasVideoInputDevices, error);
+  const { headline, message } = getSnackbarContent(
+    hasAudioInputDevices,
+    hasVideoInputDevices,
+    error,
+  );
 
   return (
     <Snackbar
@@ -91,7 +95,7 @@ export default function MediaErrorSnackbar({ error }: { error?: Error }) {
       handleClose={() => setIsSnackbarDismissed(true)}
       headline={headline}
       message={message}
-      variant="warning"
+      variant='warning'
     />
   );
 }

@@ -15,7 +15,12 @@ module.exports = {
   },
   ignorePatterns: ['/*.*'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endofline: 'auto',
+      },
+    ],
     'no-underscore-dangle': 0,
     'no-param-reassign': 0,
     'no-restricted-syntax': 0,

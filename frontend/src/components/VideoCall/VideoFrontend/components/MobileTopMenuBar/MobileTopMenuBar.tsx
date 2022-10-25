@@ -35,8 +35,13 @@ export default function MobileTopMenuBar() {
   const { room } = useVideoContext();
 
   return (
-    <Grid container alignItems="center" justifyContent="space-between" className={classes.container}>
-      <Typography variant="subtitle1">{room!.name}</Typography>
+    <Grid
+      container
+      alignItems='center'
+      justifyContent='space-between'
+      className={classes.container}
+    >
+      <Typography variant='subtitle1'>{room!.name}</Typography>
       <div>
         <EndCallButton className={classes.endCallButton} />
         <Menu buttonClassName={classes.settingsButton} />

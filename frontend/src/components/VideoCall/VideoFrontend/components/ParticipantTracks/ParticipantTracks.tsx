@@ -33,7 +33,9 @@ export default function ParticipantTracks({
   if (enableScreenShare && publications.some(p => p.trackName.includes('screen'))) {
     // When displaying a screenshare track is allowed, and a screen share track exists,
     // remove all video tracks without the name 'screen'.
-    filteredPublications = publications.filter(p => p.trackName.includes('screen') || p.kind !== 'video');
+    filteredPublications = publications.filter(
+      p => p.trackName.includes('screen') || p.kind !== 'video',
+    );
   } else {
     // Else, remove all screenshare tracks
     filteredPublications = publications.filter(p => !p.trackName.includes('screen'));

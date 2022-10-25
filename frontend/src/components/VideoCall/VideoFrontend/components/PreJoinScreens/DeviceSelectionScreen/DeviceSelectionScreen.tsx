@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column-reverse',
-      width: '100%',
+      'flexDirection': 'column-reverse',
+      'width': '100%',
       '& button': {
         margin: '0.5em 0',
       },
@@ -52,22 +52,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface DeviceSelectionScreenProps {
-}
+interface DeviceSelectionScreenProps {}
 
-export default function DeviceSelectionScreen({ }: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({}: DeviceSelectionScreenProps) {
   const classes = useStyles();
   const { getToken, isFetching } = useAppState();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
-
   return (
     <>
-      <Grid container justifyContent="center">
+      <Grid container justifyContent='center'>
         <Grid item md={7} sm={12} xs={12}>
           <div className={classes.localPreviewContainer}>
-            <LocalVideoPreview identity="You" />
+            <LocalVideoPreview identity='You' />
           </div>
           <div className={classes.mobileButtonBar}>
             <Hidden mdUp>
@@ -78,7 +76,12 @@ export default function DeviceSelectionScreen({ }: DeviceSelectionScreenProps) {
           </div>
         </Grid>
         <Grid item md={5} sm={12} xs={12}>
-          <Grid container direction="column" justifyContent="space-between" style={{ height: '100%' }}>
+          <Grid
+            container
+            direction='column'
+            justifyContent='space-between'
+            style={{ height: '100%' }}
+          >
             <div>
               <Hidden smDown>
                 <ToggleAudioButton className={classes.deviceButton} disabled={disableButtons} />

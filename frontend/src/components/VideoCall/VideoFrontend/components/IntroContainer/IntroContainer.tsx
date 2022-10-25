@@ -50,10 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '210px',
     textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      alignItems: 'center',
-      width: '90%',
-      textAlign: 'initial',
+      'display': 'flex',
+      'alignItems': 'center',
+      'width': '90%',
+      'textAlign': 'initial',
       '& svg': {
         height: '64px',
       },
@@ -97,8 +97,8 @@ const IntroContainer = (props: IntroContainerProps) => {
       <div className={classes.container}>
         <div className={classes.innerContainer}>
           <div className={classes.content}>{props.children}</div>
-            </div>
-          </div>
+        </div>
+      </div>
     </div>
   );
 };

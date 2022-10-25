@@ -87,10 +87,10 @@ export default function Snackbar({ headline, message, variant, open, handleClose
             {variant === 'info' && <InfoIcon />}
           </div>
           <div>
-            <Typography variant="body1" className={classes.headline} component="span">
+            <Typography variant='body1' className={classes.headline} component='span'>
               {headline}
             </Typography>
-            <Typography variant="body1" component="span">
+            <Typography variant='body1' component='span'>
               {' '}
               {message}
             </Typography>
@@ -98,8 +98,8 @@ export default function Snackbar({ headline, message, variant, open, handleClose
         </div>
         <div>
           {handleClose && (
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
+            <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
+              <CloseIcon fontSize='small' />
             </IconButton>
           )}
         </div>

@@ -17,8 +17,8 @@ import VideoInputList from './VideoInputList/VideoInputList';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: '600px',
-    minHeight: '400px',
+    'width': '600px',
+    'minHeight': '400px',
     [theme.breakpoints.down('xs')]: {
       width: 'calc(100vw - 32px)',
     },
@@ -39,14 +39,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1.1rem',
   },
   listSection: {
-    margin: '2em 0 0.8em',
+    'margin': '2em 0 0.8em',
     '&:first-child': {
       margin: '1em 0 2em 0',
     },
   },
 }));
 
-export default function DeviceSelectionDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function DeviceSelectionDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const classes = useStyles();
 
   return (
@@ -55,14 +61,14 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
       <Divider />
       <DialogContent className={classes.container}>
         <div className={classes.listSection}>
-          <Typography variant="h6" className={classes.headline}>
+          <Typography variant='h6' className={classes.headline}>
             Video
           </Typography>
           <VideoInputList />
         </div>
         <Divider />
         <div className={classes.listSection}>
-          <Typography variant="h6" className={classes.headline}>
+          <Typography variant='h6' className={classes.headline}>
             Audio
           </Typography>
           <AudioInputList />
@@ -73,7 +79,7 @@ export default function DeviceSelectionDialog({ open, onClose }: { open: boolean
       </DialogContent>
       <Divider />
       <DialogActions>
-        <Button color="primary" variant="contained" className={classes.button} onClick={onClose}>
+        <Button color='primary' variant='contained' className={classes.button} onClick={onClose}>
           Done
         </Button>
       </DialogActions>

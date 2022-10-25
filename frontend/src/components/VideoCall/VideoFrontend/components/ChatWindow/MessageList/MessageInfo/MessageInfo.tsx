@@ -11,7 +11,7 @@ const useStyles = makeStyles(() =>
       fontSize: '12px',
       color: '#606B85',
     },
-  })
+  }),
 );
 
 interface MessageInfoProps {

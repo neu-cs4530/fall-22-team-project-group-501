@@ -31,7 +31,7 @@ export default function Participant({
   insideGrid,
 }: ParticipantProps) {
   return (
-    <div className="participant-wrapper">
+    <div className='participant-wrapper'>
       <ParticipantInfo
         participant={participant}
         profile={profile}
@@ -40,7 +40,8 @@ export default function Participant({
         isLocalParticipant={isLocalParticipant}
         hideParticipant={hideParticipant}
         slot={slot}
-        insideGrid={insideGrid}>
+        insideGrid={insideGrid}
+      >
         <ParticipantTracks
           participant={participant}
           videoOnly={videoOnly}

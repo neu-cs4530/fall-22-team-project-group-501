@@ -18,9 +18,9 @@ export default function MainParticipant() {
     mainParticipant !== localParticipant
       ? 'high'
       : null;
-  
-  if(!mainParticipant){
-    return <></>
+
+  if (!mainParticipant) {
+    return <></>;
   }
 
   return (

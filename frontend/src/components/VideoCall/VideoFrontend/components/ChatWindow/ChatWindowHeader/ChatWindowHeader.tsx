@@ -25,7 +25,7 @@ const useStyles = makeStyles(() =>
       border: '0',
       padding: '0.4em',
     },
-  })
+  }),
 );
 
 export default function ChatWindowHeader() {

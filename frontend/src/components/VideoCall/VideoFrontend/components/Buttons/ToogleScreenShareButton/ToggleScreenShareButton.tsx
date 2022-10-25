@@ -17,13 +17,13 @@ const useStyles = makeStyles(() =>
   createStyles({
     button: {
       '&[disabled]': {
-        color: '#bbb',
+        'color': '#bbb',
         '& svg *': {
           fill: '#bbb',
         },
       },
     },
-  })
+  }),
 );
 
 export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
@@ -47,7 +47,7 @@ export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
   return (
     <Tooltip
       title={tooltipMessage}
-      placement="top"
+      placement='top'
       PopperProps={{ disablePortal: true }}
       style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
     >

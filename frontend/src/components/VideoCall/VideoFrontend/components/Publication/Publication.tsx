@@ -20,7 +20,12 @@ interface PublicationProps {
   videoPriority?: Track.Priority | null;
 }
 
-export default function Publication({ publication, isLocalParticipant, videoOnly, videoPriority }: PublicationProps) {
+export default function Publication({
+  publication,
+  isLocalParticipant,
+  videoOnly,
+  videoPriority,
+}: PublicationProps) {
   const track = useTrack(publication);
 
   if (!track) return null;

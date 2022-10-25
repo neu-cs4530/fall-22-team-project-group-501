@@ -7,9 +7,9 @@ export default function ReconnectingNotification() {
 
   return (
     <Snackbar
-      variant="error"
-      headline="Connection Lost:"
-      message="Reconnecting to room..."
+      variant='error'
+      headline='Connection Lost:'
+      message='Reconnecting to room...'
       open={roomState === 'reconnecting'}
     />
   );

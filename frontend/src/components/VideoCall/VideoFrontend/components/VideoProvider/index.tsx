@@ -1,10 +1,18 @@
 import React, { createContext, ReactNode, useCallback, useState } from 'react';
-import { CreateLocalTrackOptions, ConnectOptions, LocalAudioTrack, LocalVideoTrack, Room } from 'twilio-video';
+import {
+  CreateLocalTrackOptions,
+  ConnectOptions,
+  LocalAudioTrack,
+  LocalVideoTrack,
+  Room,
+} from 'twilio-video';
 import { Callback, ErrorCallback } from '../../types';
 import { SelectedParticipantProvider } from './useSelectedParticipant/useSelectedParticipant';
 
 import AttachVisibilityHandler from './AttachVisibilityHandler/AttachVisibilityHandler';
-import useBackgroundSettings, { BackgroundSettings } from './useBackgroundSettings/useBackgroundSettings';
+import useBackgroundSettings, {
+  BackgroundSettings,
+} from './useBackgroundSettings/useBackgroundSettings';
 import useHandleRoomDisconnection from './useHandleRoomDisconnection/useHandleRoomDisconnection';
 import useHandleTrackPublicationFailed from './useHandleTrackPublicationFailed/useHandleTrackPublicationFailed';
 import useLocalTracks from './useLocalTracks/useLocalTracks';
@@ -48,13 +56,18 @@ interface VideoProviderProps {
   children: ReactNode;
 }
 
-export function VideoProvider({ options, children, onError = () => {}, onDisconnect=()=>{} }: VideoProviderProps) {
+export function VideoProvider({
+  options,
+  children,
+  onError = () => {},
+  onDisconnect = () => {},
+}: VideoProviderProps) {
   const onErrorCallback: ErrorCallback = useCallback(
     error => {
       console.log(`ERROR: ${error.message}`, error);
       onError(error);
     },
-    [onError]
+    [onError],
   );
 
   const {
@@ -78,15 +91,15 @@ export function VideoProvider({ options, children, onError = () => {}, onDisconn
     removeLocalVideoTrack,
     isSharingScreen,
     toggleScreenShare,
-    onDisconnect
+    onDisconnect,
   );
   useHandleTrackPublicationFailed(room, onError);
   useRestartAudioTrackOnDeviceChange(localTracks);
 
   const [isBackgroundSelectionOpen, setIsBackgroundSelectionOpen] = useState(false);
-  const videoTrack = localTracks.find(track => !track.name.includes('screen') && track.kind === 'video') as
-    | LocalVideoTrack
-    | undefined;
+  const videoTrack = localTracks.find(
+    track => !track.name.includes('screen') && track.kind === 'video',
+  ) as LocalVideoTrack | undefined;
   const [backgroundSettings, setBackgroundSettings] = useBackgroundSettings(videoTrack, room);
 
   return (
