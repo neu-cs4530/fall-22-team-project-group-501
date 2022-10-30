@@ -12,6 +12,7 @@ import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSoc
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
 
+
 // Create the server instances
 const app = Express();
 app.use(CORS());
