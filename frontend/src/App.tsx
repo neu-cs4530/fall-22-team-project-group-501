@@ -32,6 +32,8 @@ function App() {
     supKey ?? '', // eslint-disable-line no-undef
   );
 
+  function handleCallbackResponse(response: any) {}
+
   const [townController, setTownController] = useState<TownController | null>(null);
   const [authClient, setAuthClient] = useState<SupabaseClient | null>(null); // eslint-disable-line no-unused-vars
 
