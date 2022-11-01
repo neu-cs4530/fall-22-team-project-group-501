@@ -58,3 +58,31 @@ export interface TownCreateParams {
    */
   mapFile?: string;
 }
+
+/**
+ * The public-facing model that represents a town. More information about the town
+ * is available for users who join it.
+ */
+export interface User {
+  /**
+   * An internal ID used to identify each user
+   */
+  userID: number;
+  /**
+   * The nickname of the user
+   */
+  nickname: string | null;
+  /**
+   * The email of the user
+   */
+  email: string;
+}
+/**
+ * Payload that is sent back to a client upon creating a user
+ */
+export interface UserCreateResponse {
+  /**
+   * The ID of the newly created user. This ID is needed to get the user's information
+   */
+  userID: number;
+}

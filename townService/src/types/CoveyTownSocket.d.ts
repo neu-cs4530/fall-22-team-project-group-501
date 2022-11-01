@@ -16,4 +16,4 @@ export type CoveyTownSocket = Socket<ClientToServerEvents, ServerToClientEvents>
 export type TownEmitter = BroadcastOperator<ServerToClientEvents, SocketData>;
 export type TownEmitterFactory = (townID: string) => TownEmitter;
 export type UserEmitter = BroadcastOperator<ServerToClientEvents, SocketData>;
-export type UserEmitterFactory = (userID: string) => TownEmitter;
+export type UserEmitterFactory = (userID: number) => TownEmitter;
