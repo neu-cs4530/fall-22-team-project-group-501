@@ -17,6 +17,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
+import { Auth } from '@supabase/auth-ui-react'; // eslint-disable-line no-unused-vars
 import assert from 'assert';
 import React, { useCallback, useEffect, useState } from 'react';
 import TownController from '../../classes/TownController';
@@ -32,6 +33,7 @@ export default function TownSelection(): JSX.Element {
   const [currentPublicTowns, setCurrentPublicTowns] = useState<Town[]>();
   const loginController = useLoginController();
   const { setTownController, townsService } = loginController;
+  const { setAuthClient, supabaseService } = loginController;
   const { connect: videoConnect } = useVideoContext();
 
   const toast = useToast();
@@ -161,10 +163,14 @@ export default function TownSelection(): JSX.Element {
     }
   };
 
+  console.log('AuthClient', supabaseService);
+
   return (
     <>
       <form>
         <Stack>
+          {/* <Auth supabaseClient={supabaseService} /> */}
+
           <Box p='4' borderWidth='1px' borderRadius='lg'>
             <Heading as='h2' size='lg'>
               Select a username
@@ -181,6 +187,7 @@ export default function TownSelection(): JSX.Element {
               />
             </FormControl>
           </Box>
+
           <Box borderWidth='1px' borderRadius='lg'>
             <Heading p='4' as='h2' size='lg'>
               Create a New Town

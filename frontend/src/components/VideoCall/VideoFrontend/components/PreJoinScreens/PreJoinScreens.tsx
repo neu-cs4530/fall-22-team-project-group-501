@@ -1,14 +1,12 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
-import IntroContainer from '../IntroContainer/IntroContainer';
-import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
-import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
-import { useAppState } from '../../state';
-import { useParams } from 'react-router-dom';
-import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { Heading, Text } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import OAuthScreen from '../../../../Login/OAuthScreen';
 import TownSelection from '../../../../Login/TownSelection';
-import { TownJoinResponse } from '../../../../../types/CoveyTownSocket';
+import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { useAppState } from '../../state';
+import IntroContainer from '../IntroContainer/IntroContainer';
+import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
+import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 
 export enum Steps {
   roomNameStep,
@@ -43,6 +41,7 @@ export default function PreJoinScreens() {
         to hang out in, or join an existing one.
       </Text>
       <DeviceSelectionScreen />
+      <OAuthScreen />
       <TownSelection />
     </IntroContainer>
   );
