@@ -10,6 +10,7 @@ import TownController from './classes/TownController';
 import TownMap from './components/Town/TownMap';
 import { ChatProvider } from './components/VideoCall/VideoFrontend/components/ChatProvider';
 import ErrorDialog from './components/VideoCall/VideoFrontend/components/ErrorDialog/ErrorDialog';
+import PreJoinScreens from './components/VideoCall/VideoFrontend/components/PreJoinScreens/PreJoinScreens';
 import UnsupportedBrowserWarning from './components/VideoCall/VideoFrontend/components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
 import { VideoProvider } from './components/VideoCall/VideoFrontend/components/VideoProvider';
 import AppStateProvider, { useAppState } from './components/VideoCall/VideoFrontend/state';
@@ -54,11 +55,7 @@ function App() {
       </TownControllerContext.Provider>
     );
   } else {
-    page = (
-      <div>
-        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
-      </div>
-    );
+    page = <PreJoinScreens />;
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);

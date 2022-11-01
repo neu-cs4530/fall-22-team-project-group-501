@@ -169,7 +169,7 @@ export default function TownSelection(): JSX.Element {
     <>
       <form>
         <Stack>
-          {/* <Auth supabaseClient={supabaseService} /> */}
+          <Auth supabaseClient={supabaseService} />
 
           <Box p='4' borderWidth='1px' borderRadius='lg'>
             <Heading as='h2' size='lg'>
