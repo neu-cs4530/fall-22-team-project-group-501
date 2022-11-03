@@ -8,10 +8,18 @@ export default class UsersStore {
 
   private _users: Map<number, User>;
 
-  private _emitterFactory: UserEmitterFactory;
+  static initializeUsersStore() {
+    UsersStore._instance = new UsersStore();
+    UsersStore._instance._loadExistingUsers();
+  }
 
-  static initializeTownsStore(emitterFactory: UserEmitterFactory) {
-    UsersStore._instance = new UsersStore(emitterFactory);
+  private async _loadExistingUsers() {
+    const { data, error } = await supabase.from('user').select('*, auth.users ( email )');
+
+    if (!data) {
+      throw new Error('Could not load existing users');
+    }
+    data?.forEach(user => this._addExistingUser(user.user_id, user.nickname, user.email));
   }
 
   /**
@@ -21,13 +29,12 @@ export default class UsersStore {
    */
   static getInstance(): UsersStore {
     if (UsersStore._instance === undefined) {
-      throw new Error('TownsStore must be initialized before getInstance is called');
+      UsersStore.initializeUsersStore();
     }
     return UsersStore._instance;
   }
 
-  private constructor(emitterFactory: UserEmitterFactory) {
-    this._emitterFactory = emitterFactory;
+  private constructor() {
     this._users = new Map<number, User>();
   }
 
@@ -50,7 +57,7 @@ export default class UsersStore {
   }
 
   private _addExistingUser(userID: number, nickname: string | null, email: string): User {
-    const newUser = new User(userID, email, nickname, this._emitterFactory(userID));
+    const newUser = new User(userID, email, nickname);
     this._users.set(userID, newUser);
     return newUser;
   }

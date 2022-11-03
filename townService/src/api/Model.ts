@@ -86,3 +86,15 @@ export interface UserCreateResponse {
    */
   userID: number;
 }
+
+export interface UserCreateParams {
+  /**
+   * The email of the user to create
+   */
+  email: string;
+
+  /**
+   * The nickname for the new user. May be null.
+   */
+  nickname: string | undefined;
+}

@@ -14,7 +14,14 @@ import {
   Tags,
 } from 'tsoa';
 
-import User, { Town, TownCreateParams, TownCreateResponse } from '../api/Model';
+import {
+  User,
+  UserCreateResponse,
+  Town,
+  TownCreateParams,
+  TownCreateResponse,
+  UserCreateParams,
+} from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
 import CoveyUsersStore from '../lib/UsersStore';
 import {
@@ -53,30 +60,24 @@ export class UsersController extends Controller {
    */
   @Get('{userID}')
   @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
-  public async getUserInfo(@Path() userID: number): Promise<User> {
+  public async getUserInfo(@Path() userID: number): Promise<User | undefined> {
     const success = this._usersStore.getUserByID(userID);
     return success.then(user => user?.toModel());
   }
-
 
   /**
    * Create a new town
    *
    * @param request The public-facing information for the new town
-   * @example request {"friendlyName": "My testing town public name", "isPubliclyListed": true}
+   * @example request {"email": "The email of the user to create", "isPubliclyListed": "The nickname of the user to create. May be null"}
    * @returns The ID of the newly created town, and a secret password that will be needed to update or delete this town.
    */
-   @Example<UserCreateResponse>({ townID: 'stringID', townUpdatePassword: 'secretPassword' })
-   @Post()
-   public async createTown(@Body() request: TownCreateParams): Promise<TownCreateResponse> {
-     const { townID, townUpdatePassword } = await this._townsStore.createTown(
-       request.friendlyName,
-       request.isPubliclyListed,
-       request.mapFile,
-     );
-     return {
-       townID,
-       townUpdatePassword,
-     };
-   }
+  @Example<UserCreateResponse>({ userID: 123 })
+  @Post()
+  public async createTown(@Body() request: UserCreateParams): Promise<UserCreateResponse> {
+    const { userID } = await this._usersStore.createUser(request.email, request.nickname || null);
+    return {
+      userID,
+    };
+  }
 }

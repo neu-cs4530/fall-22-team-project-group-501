@@ -33,8 +33,6 @@ export default class User {
 
   private _nickname: string | null;
 
-  private _broadcastEmitter: BroadcastOperator<ServerToClientEvents, SocketData>;
-
   get userID(): number {
     return this._userID;
   }
@@ -62,19 +60,12 @@ export default class User {
       return;
     }
     this._nickname = newNickname;
-    this._broadcastEmitter.emit('userUpdate', this);
   }
 
-  constructor(
-    userID: number,
-    email: string,
-    nickname: string | null,
-    broadcastEmitter: BroadcastOperator<ServerToClientEvents, SocketData>,
-  ) {
+  constructor(userID: number, email: string, nickname: string | null) {
     this._userID = userID;
     this._email = email;
     this._nickname = nickname;
-    this._broadcastEmitter = broadcastEmitter;
   }
 
   public toModel(): UserModel {
