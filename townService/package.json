@@ -26,7 +26,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "stryker-prepare": "replace-in-file '/../../..//g' '../../../../../' src/types/CoveyTownSocket.d.ts --isRegex",
     "update-types": "npx supabase gen types typescript --project-id \"mdootllbkurfvmpootdk\" > src/types/Supabase.ts & prettier --write src/types/Supabase.ts",
-    "pretty": "prettier --write \"./**/*.{ts,tsx,json}\""
+    "pretty": "prettier --write \"./**/*.{ts,tsx}\""
   },
   "keywords": [],
   "devDependencies": {
