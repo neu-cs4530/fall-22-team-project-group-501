@@ -32,10 +32,10 @@ export default class User {
     return this._nickname || '';
   }
 
-  set nickname(newNickname: string) {
+  set nickname(newNickname: string | null) {
     // TODO: Add code to change nickname in database
 
-    if (this.nickname !== newNickname) {
+    if (this._nickname === newNickname) {
       return;
     }
     this._nickname = newNickname;

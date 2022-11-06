@@ -3,7 +3,7 @@ import { Body, Controller, Get, Patch, Path, Response, Route, Tags } from 'tsoa'
 
 import { User } from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
-import CoveyUsersStore from '../lib/UsersStore';
+import CoveyUsersStore from './UsersStore';
 
 /**
  * This is the town route
@@ -37,8 +37,4 @@ export class UsersController extends Controller {
     return success.then(user => user?.toModel());
   }
 
-  /**
-   * Sets the user's nickname to the given value
-   */
-  @Patch()
 }
