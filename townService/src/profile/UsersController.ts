@@ -1,8 +1,7 @@
 import { Controller, Get, Path, Response, Route, Tags } from 'tsoa';
 
-import { User as UserModel } from '../api/Model';
-import InvalidParametersError from '../lib/InvalidParametersError';
-import User from './User';
+import { User } from '../api/Model';
+import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
 
 /**
@@ -21,7 +20,7 @@ export class UsersController extends Controller {
    * @returns list of users
    */
   @Get()
-  public async listUsers(): Promise<UserModel[]> {
+  public async listUsers(): Promise<User[]> {
     return this._usersStore.getUsers();
   }
 
@@ -31,9 +30,8 @@ export class UsersController extends Controller {
    * @param userID  user to retrieve
    */
   @Get('{userID}')
-  @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
-  public async getUserInfo(@Path() userID: string): Promise<UserModel | undefined> {
-    const success: Promise<User | undefined> = this._usersStore.getUserByID(userID);
+  public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
+    const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
     return success.then(user => user?.toModel());
   }
 }
