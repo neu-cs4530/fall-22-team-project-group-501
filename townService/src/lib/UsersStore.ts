@@ -1,12 +1,14 @@
+import AccessToken from 'twilio/lib/jwt/AccessToken';
 import User from '../profile/User';
-import supabase from '../supabase/client';
+import supabase, { createUserClient } from '../supabase/client';
 import { UserEmitterFactory } from '../types/CoveyTownSocket';
 import { User as UserModel } from '../api/Model';
+import InvalidAuthorizationError from './InvalidAuthorizationError';
 
 export default class UsersStore {
   private static _instance: UsersStore;
 
-  private _users: Map<number, User>;
+  private _users: Map<string, User>;
 
   static initializeUsersStore() {
     UsersStore._instance = new UsersStore();
@@ -14,12 +16,13 @@ export default class UsersStore {
   }
 
   private async _loadExistingUsers() {
-    const { data, error } = await supabase.from('user').select('*, auth.users ( email )');
+    const { data, error } = await supabase.from('users').select('*');
 
+    console.log(data);
     if (!data) {
       throw new Error('Could not load existing users');
     }
-    data?.forEach(user => this._addExistingUser(user.user_id, user.nickname, user.email));
+    data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email));
   }
 
   /**
@@ -35,15 +38,18 @@ export default class UsersStore {
   }
 
   private constructor() {
-    this._users = new Map<number, User>();
+    this._users = new Map<string, User>();
   }
 
-  async getUserByID(userID: number): Promise<User | undefined> {
+  async getUserByID(userID: string): Promise<User | undefined> {
+    if ((await supabase.auth.getUser()).data.user?.id !== userID) {
+      throw new InvalidAuthorizationError(`Unauthorized access for user ${userID}`);
+    }
     const user: User | undefined = this._users.get(userID);
     if (user) {
       return user;
     }
-    const { data, error } = await supabase.from('user').select('*').eq('user_id', userID);
+    const { data, error } = await supabase.from('users').select('*').eq('id', userID);
 
     if (error !== null) {
       console.error(error.message);
@@ -51,32 +57,22 @@ export default class UsersStore {
     }
     if (data && data.length > 0) {
       const dbUser = data[0];
-      return this._addExistingUser(dbUser.user_id, dbUser.nickname, dbUser.email);
+      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
     }
     return undefined;
   }
 
-  private _addExistingUser(userID: number, nickname: string | null, email: string): User {
+  private _addExistingUser(userID: string, nickname: string | null, email: string): User {
     const newUser = new User(userID, email, nickname);
     this._users.set(userID, newUser);
     return newUser;
   }
 
-  public async createUser(email: string, nickname: string | null): Promise<User> {
-    const { data, error } = await supabase.from('user').insert({ nickname, email }).select();
-    if (error !== null) {
-      throw new Error(`Could not create user in database. Failed with Error: ${error.message}`);
-    }
-    if (data !== null && data.length > 0) {
-      return this._addExistingUser(data[0].user_id, data[0].nickname, data[0].email);
-    }
-    throw new Error('Could not create User in database');
-  }
-
   /**
    * @returns List of all publicly visible towns
    */
-  getUsers(): UserModel[] {
+  async getUsers(): Promise<UserModel[]> {
+    await this._loadExistingUsers();
     return Array.from(this._users).map(([userID, user]) => ({
       userID,
       email: user.email,

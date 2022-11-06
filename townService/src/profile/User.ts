@@ -1,24 +1,3 @@
-import { ITiledMap, ITiledMapObjectLayer } from '@jonbell/tiled-map-type-guard';
-import { nanoid } from 'nanoid';
-import { BroadcastOperator } from 'socket.io';
-import IVideoClient from '../lib/IVideoClient';
-import Player from '../lib/Player';
-import TwilioVideo from '../lib/TwilioVideo';
-import { isViewingArea } from '../TestUtils';
-import {
-  ChatMessage,
-  ConversationArea as ConversationAreaModel,
-  CoveyTownSocket,
-  Interactable,
-  PlayerLocation,
-  ServerToClientEvents,
-  SocketData,
-  ViewingArea as ViewingAreaModel,
-} from '../types/CoveyTownSocket';
-import ConversationArea from '../town/ConversationArea';
-import InteractableArea from '../town/InteractableArea';
-import ViewingArea from '../town/ViewingArea';
-import { Database } from '../supabase/types';
 import { User as UserModel } from '../api/Model';
 
 /**
@@ -27,17 +6,17 @@ import { User as UserModel } from '../api/Model';
  *  - changing nickname
  */
 export default class User {
-  private _userID: number;
+  private _userID: string;
 
   private _email: string;
 
   private _nickname: string | null;
 
-  get userID(): number {
+  get userID(): string {
     return this._userID;
   }
 
-  set userID(userID: number) {
+  set userID(userID: string) {
     this._userID = userID;
   }
 
@@ -62,7 +41,7 @@ export default class User {
     this._nickname = newNickname;
   }
 
-  constructor(userID: number, email: string, nickname: string | null) {
+  constructor(userID: string, email: string, nickname: string | null) {
     this._userID = userID;
     this._email = email;
     this._nickname = nickname;

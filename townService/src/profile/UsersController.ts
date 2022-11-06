@@ -1,35 +1,9 @@
 import assert from 'assert';
-import {
-  Body,
-  Controller,
-  Delete,
-  Example,
-  Get,
-  Header,
-  Patch,
-  Path,
-  Post,
-  Response,
-  Route,
-  Tags,
-} from 'tsoa';
+import { Body, Controller, Get, Patch, Path, Response, Route, Tags } from 'tsoa';
 
-import {
-  User,
-  UserCreateResponse,
-  Town,
-  TownCreateParams,
-  TownCreateResponse,
-  UserCreateParams,
-} from '../api/Model';
+import { User } from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
 import CoveyUsersStore from '../lib/UsersStore';
-import {
-  ConversationArea,
-  CoveyTownSocket,
-  TownSettingsUpdate,
-  ViewingArea,
-} from '../types/CoveyTownSocket';
 
 /**
  * This is the town route
@@ -42,9 +16,9 @@ export class UsersController extends Controller {
   private _usersStore: CoveyUsersStore = CoveyUsersStore.getInstance();
 
   /**
-   * List all towns that are set to be publicly available
+   * List all users
    *
-   * @returns list of towns
+   * @returns list of users
    */
   @Get()
   public async listUsers(): Promise<User[]> {
@@ -52,32 +26,19 @@ export class UsersController extends Controller {
   }
 
   /**
-   * Updates an existing town's settings by ID
+   * Retrieves information of an existing user
    *
-   * @param townID  town to update
-   * @param townUpdatePassword  town update password, must match the password returned by createTown
-   * @param requestBody The updated settings
+   * @param userID  user to retrieve
    */
   @Get('{userID}')
   @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
-  public async getUserInfo(@Path() userID: number): Promise<User | undefined> {
+  public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
     const success = this._usersStore.getUserByID(userID);
     return success.then(user => user?.toModel());
   }
 
   /**
-   * Create a new town
-   *
-   * @param request The public-facing information for the new town
-   * @example request {"email": "The email of the user to create", "isPubliclyListed": "The nickname of the user to create. May be null"}
-   * @returns The ID of the newly created town, and a secret password that will be needed to update or delete this town.
+   * Sets the user's nickname to the given value
    */
-  @Example<UserCreateResponse>({ userID: 123 })
-  @Post()
-  public async createTown(@Body() request: UserCreateParams): Promise<UserCreateResponse> {
-    const { userID } = await this._usersStore.createUser(request.email, request.nickname || null);
-    return {
-      userID,
-    };
-  }
+  @Patch()
 }

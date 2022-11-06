@@ -1,40 +1,40 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
 
 export interface Database {
   public: {
     Tables: {
-      user: {
+      users: {
         Row: {
-          nickname: string | null
-          email: string
-          user_id: number
-        }
+          id: string;
+          email: string | null;
+          nickname: string | null;
+          created_at: string;
+          updated_at: string | null;
+        };
         Insert: {
-          nickname?: string | null
-          email: string
-          user_id?: number
-        }
+          id: string;
+          email?: string | null;
+          nickname?: string | null;
+          created_at?: string;
+          updated_at?: string | null;
+        };
         Update: {
-          nickname?: string | null
-          email?: string
-          user_id?: number
-        }
-      }
-    }
+          id?: string;
+          email?: string | null;
+          nickname?: string | null;
+          created_at?: string;
+          updated_at?: string | null;
+        };
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      [_ in never]: never
-    }
-  }
+      [_ in never]: never;
+    };
+  };
 }

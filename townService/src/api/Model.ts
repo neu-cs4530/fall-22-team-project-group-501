@@ -67,7 +67,7 @@ export interface User {
   /**
    * An internal ID used to identify each user
    */
-  userID: number;
+  userID: string;
   /**
    * The nickname of the user
    */
@@ -76,25 +76,4 @@ export interface User {
    * The email of the user
    */
   email: string;
-}
-/**
- * Payload that is sent back to a client upon creating a user
- */
-export interface UserCreateResponse {
-  /**
-   * The ID of the newly created user. This ID is needed to get the user's information
-   */
-  userID: number;
-}
-
-export interface UserCreateParams {
-  /**
-   * The email of the user to create
-   */
-  email: string;
-
-  /**
-   * The nickname for the new user. May be null.
-   */
-  nickname: string | undefined;
 }
