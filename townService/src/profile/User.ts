@@ -8,7 +8,7 @@ import { User as UserModel } from '../api/Model';
 export default class User {
   private _userID: string;
 
-  private _email: string;
+  private _email: string | null;
 
   private _nickname: string | null;
 
@@ -21,10 +21,10 @@ export default class User {
   }
 
   get email(): string {
-    return this._email;
+    return this._email || '';
   }
 
-  set email(email: string) {
+  set email(email: string | null) {
     this._email = email;
   }
 
@@ -41,7 +41,7 @@ export default class User {
     this._nickname = newNickname;
   }
 
-  constructor(userID: string, email: string, nickname: string | null) {
+  constructor(userID: string, email: string | null, nickname: string | null) {
     this._userID = userID;
     this._email = email;
     this._nickname = nickname;

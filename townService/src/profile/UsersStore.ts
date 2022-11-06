@@ -27,6 +27,9 @@ export default class UsersStore {
     if (!data) {
       throw new Error('Could not load existing users');
     }
+    if (error) {
+      throw new Error(`Could not load existing users. Failed with error: ${error}`);
+    }
     data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email));
   }
 
@@ -71,7 +74,6 @@ export default class UsersStore {
     const { data, error } = await supabase.from('users').select('*').eq('id', userID);
 
     if (error !== null) {
-      console.error(error.message);
       throw new Error(`Could not retrieve user from database. Failed with Error: ${error.message}`);
     }
     if (data && data.length > 0) {
@@ -88,7 +90,7 @@ export default class UsersStore {
    * @param email email of the user to add
    * @returns the user that was added
    */
-  public _addExistingUser(userID: string, nickname: string | null, email: string): User {
+  public _addExistingUser(userID: string, nickname: string | null, email: string | null): User {
     const newUser = new User(userID, email, nickname);
     this._users.set(userID, newUser);
     return newUser;

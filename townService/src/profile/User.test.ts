@@ -37,6 +37,12 @@ describe('User', () => {
       user.email = 'testEmail';
       expect(user.email).toBe('testEmail');
     });
+
+    it('Can be returns an empty string if null', () => {
+      expect(user.nickname).toBe(testUserNickname);
+      user.nickname = null;
+      expect(user.nickname).toBe('');
+    });
   });
 
   describe('toModel', () => {
