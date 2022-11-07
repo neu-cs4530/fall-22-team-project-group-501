@@ -31,81 +31,47 @@ import SettingsIcon from '../VideoCall/VideoFrontend/icons/SettingsIcon';
 import TownSettingsPrejoin from './TownSettingsPrejoin';
 
 export default function TownSelection(): JSX.Element {
+  const toast = useToast();
+  const loginController = useLoginController();
+  const { setTownController, townsService } = loginController;
   const [userName, setUserName] = useState<string>('');
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
   const [currentPublicTowns, setCurrentPublicTowns] = useState<Town[]>();
-
-  const [editingTownController, setEditingTownController] = useState<TownController | null>(null);
-  const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
-
-  /*   const openSettings = useCallback(() => {
-    onOpen();
-  }, [onOpen]);
-
-  const closeSettings = useCallback(() => {
-    onClose();
-  }, [onClose]); */
-
-  const loginController = useLoginController();
-  const { setTownController, townsService } = loginController;
-  const { setAuthClient, supabaseService } = loginController;
   const { connect: videoConnect } = useVideoContext();
 
-  const settings = useSettings();
-  const { isModalOpen, openModal, closeModal } = settings;
-  const { setEditingTown, getEditingTown } = settings;
 
+  // Authentication states
+  const { setAuthClient, supabaseService } = loginController;
   const [signedIn, setSignedIn] = useState(false);
   const [signedInAsGuest, setSignedInAsGuest] = useState(false);
   const [sessionData, setSessionData] = useState<Session | null>(null);
   const [user, setUser] = useState<User | undefined>(undefined);
 
-  const adminTownIDList = ['20925346'];
+  // Admin settings states
+  const settings = useSettings();
+  // TODO: fetch adminTownIDList from Supabase
+  const adminTownIDList = ['20925346', '2FB17BCA'];
+  const { isModalOpen, openModal, closeModal } = settings;
+  const { setEditingTown, getEditingTown } = settings;
+  const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
+
   const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>();
 
   // Filters the list of towns to only include towns where the townID is in the adminTownIDList
-  const filterAdminTowns = useCallback(() => {
+ /*  const filterAdminTowns = useCallback(() => {
     if (currentPublicTowns) {
       const filteredTowns = currentPublicTowns.filter(town =>
         adminTownIDList.includes(town.townID),
       );
       setCurrentUserTowns(filteredTowns);
     }
-  }, [currentPublicTowns, adminTownIDList]);
+  }, [currentPublicTowns, adminTownIDList]); */
 
-  useEffect(() => {
-    const session = supabaseService.auth.getSession();
-    setSignedIn(!!session);
-    getSessionData();
-    console.log('session', sessionData);
-    setUser(sessionData?.user);
-    console.log('user', user);
-    setUserName(user?.id || '');
-  }, [supabaseService]);
 
-  // Async function to get session data with format: const { data, error } = await supabase.auth.getSession()
-  const getSessionData = async () => {
-    const session = await supabaseService.auth.getSession();
-    setSessionData(session.data.session);
-  };
 
-  // Update user object when session changes
-  useEffect(() => {
-    if (sessionData) {
-      setUser(sessionData.user);
-    }
-  }, [sessionData]);
-
-  // Update userName once we have a user ID
-  useEffect(() => {
-    if (user) {
-      setUserName(user.id);
-    }
-  }, [user]);
-
-  const toast = useToast();
+  /* --------------------- Default TownSelection Functions -------------------- */
 
   const updateTownListings = useCallback(() => {
     townsService.listTowns().then(towns => {
@@ -167,13 +133,6 @@ export default function TownSelection(): JSX.Element {
     },
     [setTownController, userName, toast, videoConnect, loginController],
   );
-
-  // Sets foundEditingTown to false if no editing town is found
-  useEffect(() => {
-    if (!getEditingTown()) {
-      setFoundEditingTown(false);
-    }
-  }, [getEditingTown]);
 
   const handleCreate = async () => {
     if (!userName || userName.length === 0) {
@@ -239,6 +198,49 @@ export default function TownSelection(): JSX.Element {
     }
   };
 
+
+
+  /* --------------------- Authentication Functions -------------------- */
+
+  useEffect(() => {
+    const session = supabaseService.auth.getSession();
+    setSignedIn(!!session);
+    getSessionData();
+    setUser(sessionData?.user);
+    setUserName(user?.id || '');
+  }, [supabaseService]);
+
+  // Async function to get session data with format: const { data, error } = await supabase.auth.getSession()
+  const getSessionData = async () => {
+    const session = await supabaseService.auth.getSession();
+    setSessionData(session.data.session);
+  };
+
+  // Update user object when session changes
+  useEffect(() => {
+    if (sessionData) {
+      setUser(sessionData.user);
+    }
+  }, [sessionData]);
+
+  // Update userName once we have a user ID
+  useEffect(() => {
+    if (user) {
+      setUserName(user.id);
+    }
+  }, [user]);
+
+
+
+  /* ------------------------ Admin Settings Functions ------------------------ */
+
+  // Sets foundEditingTown to false if no editing town is found
+  useEffect(() => {
+    if (!getEditingTown()) {
+      setFoundEditingTown(false);
+    }
+  }, [getEditingTown]);
+
   // Handle open TownSettings modal for editing town when user clicks on the settings icon for a town in the table
   const handleEdit = useCallback(
     async (townID: string) => {
@@ -249,11 +251,8 @@ export default function TownSelection(): JSX.Element {
           loginController,
         });
         await newController.connect();
-        //setEditingTownController(newController);
         setEditingTown(newController);
-        //console.log('currentTown', editingTown);
         setFoundEditingTown(true);
-        //setDidFindTown(true);
       } catch (err) {
         if (err instanceof Error) {
           toast({
@@ -352,9 +351,6 @@ export default function TownSelection(): JSX.Element {
               }}>
               Sign Out
             </Button>
-            <Button data-testid='logUserButton' onClick={() => console.log(user?.id)}>
-              Log User
-            </Button>
           </Box>
         </Stack>
       )}
@@ -434,7 +430,7 @@ export default function TownSelection(): JSX.Element {
                           // Use SettingsModalContext to sync
                           <TownSettingsPrejoin key={town.townID} />
                         ) : (
-                          <div> False </div>
+                          <></>
                         )}
                       </Tr>
                     ))}
