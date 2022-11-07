@@ -62,6 +62,19 @@ export default function TownSelection(): JSX.Element {
   const [sessionData, setSessionData] = useState<Session | null>(null);
   const [user, setUser] = useState<User | undefined>(undefined);
 
+  const adminTownIDList = ['20925346'];
+  const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>();
+
+  // Filters the list of towns to only include towns where the townID is in the adminTownIDList
+  const filterAdminTowns = useCallback(() => {
+    if (currentPublicTowns) {
+      const filteredTowns = currentPublicTowns.filter(town =>
+        adminTownIDList.includes(town.townID),
+      );
+      setCurrentUserTowns(filteredTowns);
+    }
+  }, [currentPublicTowns, adminTownIDList]);
+
   useEffect(() => {
     const session = supabaseService.auth.getSession();
     setSignedIn(!!session);
@@ -154,6 +167,13 @@ export default function TownSelection(): JSX.Element {
     },
     [setTownController, userName, toast, videoConnect, loginController],
   );
+
+  // Sets foundEditingTown to false if no editing town is found
+  useEffect(() => {
+    if (!getEditingTown()) {
+      setFoundEditingTown(false);
+    }
+  }, [getEditingTown]);
 
   const handleCreate = async () => {
     if (!userName || userName.length === 0) {
@@ -341,7 +361,6 @@ export default function TownSelection(): JSX.Element {
       <form>
         {signedIn ? (
           <Stack>
-
             {/* Table of towns created by users with options to join or delete */}
             <Box borderWidth='1px' borderRadius='lg'>
               <Heading p='4' as='h2' size='lg'>
@@ -389,41 +408,40 @@ export default function TownSelection(): JSX.Element {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {currentPublicTowns?.map(town => (
-                    <Tr key={town.townID}>
-                      <Td role='cell'>{town.friendlyName}</Td>
-                      <Td role='cell'>{town.townID}</Td>
-                      <Td role='cell'>
-
-                      </Td>
-                      <Button
-                        onClick={() => handleJoin(town.townID)}
-                        disabled={town.currentOccupancy >= town.maximumOccupancy}>
-                        Connect
-                      </Button>
-                      {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
-                      <CustomButton
-                        data-testid='editTownButton'
-                        startIcon={<SettingsIcon />}
-                        onClick={() => {
-                          handleEdit(town.townID);
-                          // use context to call openModal from provider
-                          openModal();
-                        }}></CustomButton>
-                      {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
-                      {foundEditingTown ? (
-                        // Use SettingsModalContext to sync
-                        <TownSettingsPrejoin />
-                      ) : (
-                        <div> False </div>
-                      )}
-                    </Tr>
-                  ))}
+                  {currentPublicTowns
+                    ?.filter(town => adminTownIDList.includes(town.townID))
+                    .map(town => (
+                      <Tr key={town.townID}>
+                        <Td role='cell'>{town.friendlyName}</Td>
+                        <Td role='cell'>{town.townID}</Td>
+                        <Td role='cell'></Td>
+                        <Button
+                          onClick={() => handleJoin(town.townID)}
+                          disabled={town.currentOccupancy >= town.maximumOccupancy}>
+                          Connect
+                        </Button>
+                        {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
+                        <CustomButton
+                          data-testid='editTownButton'
+                          startIcon={<SettingsIcon />}
+                          onClick={() => {
+                            handleEdit(town.townID);
+                            // use context to call openModal from provider
+                            openModal();
+                          }}></CustomButton>
+                        {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
+                        {foundEditingTown ? (
+                          // Use SettingsModalContext to sync
+                          <TownSettingsPrejoin key={town.townID} />
+                        ) : (
+                          <div> False </div>
+                        )}
+                      </Tr>
+                    ))}
                 </Tbody>
               </Table>
             </Box>
 
-            
             <Heading p='4' as='h2' size='lg'>
               -or-
             </Heading>

@@ -39,6 +39,8 @@ function TownSettingsPrejoin(props: any): JSX.Element {
 
   const closeSettings = useCallback(() => {
     closeModal();
+    setEditingTown(null);
+   
     //coveyTownController.unPause();
   }, [settings, coveyTownController]);
 
