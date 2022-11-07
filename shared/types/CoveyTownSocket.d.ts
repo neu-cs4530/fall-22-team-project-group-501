@@ -78,6 +78,7 @@ export interface ServerToClientEvents {
   townClosing: () => void;
   chatMessage: (message: ChatMessage) => void;
   interactableUpdate: (interactable: Interactable) => void;
+  userUpdate: (user: User) => void;
 }
 
 export interface ClientToServerEvents {
