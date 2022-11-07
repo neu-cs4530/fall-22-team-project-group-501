@@ -58,3 +58,22 @@ export interface TownCreateParams {
    */
   mapFile?: string;
 }
+
+/**
+ * The public-facing model that represents a town. More information about the town
+ * is available for users who join it.
+ */
+export interface User {
+  /**
+   * An internal ID used to identify each user
+   */
+  userID: string;
+  /**
+   * The nickname of the user
+   */
+  nickname: string | null;
+  /**
+   * The email of the user
+   */
+  email: string;
+}

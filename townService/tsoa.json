@@ -6,7 +6,7 @@
     "outputDirectory": "../shared/generated/",
     "specVersion": 3,
     "basePath": "/",
-    "tags": [{"name": "town"}]
+    "tags": [{ "name": "town" }]
   },
   "routes": {
     "routesDir": "generated",
