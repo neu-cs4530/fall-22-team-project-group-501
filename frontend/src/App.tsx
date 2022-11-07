@@ -1,6 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import assert from 'assert';
 import React, { useCallback, useState } from 'react';
@@ -18,11 +17,12 @@ import theme from './components/VideoCall/VideoFrontend/theme';
 import useConnectionOptions from './components/VideoCall/VideoFrontend/utils/useConnectionOptions/useConnectionOptions';
 import VideoOverlay from './components/VideoCall/VideoOverlay/VideoOverlay';
 import LoginControllerContext from './contexts/LoginControllerContext';
+import SettingsModalContext, { useModalDisclosure } from './contexts/SettingsModalContext';
 import TownControllerContext from './contexts/TownControllerContext';
 import { TownsServiceClient } from './generated/client';
 // eslint-disable-next-line no-var
 
-const supUrl = process.env.REACT_APP_TOWNS_SERVICE_URL;
+const supUrl = process.env.REACT_APP_SUPABASE_URL;
 const supKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 function App() {
@@ -55,7 +55,11 @@ function App() {
       </TownControllerContext.Provider>
     );
   } else {
-    page = <PreJoinScreens />;
+    page = (
+      <SettingsModalContext.Provider value={useModalDisclosure()}>
+        <PreJoinScreens />
+      </SettingsModalContext.Provider>
+    );
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
