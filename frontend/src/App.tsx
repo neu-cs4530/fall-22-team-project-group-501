@@ -22,15 +22,15 @@ import TownControllerContext from './contexts/TownControllerContext';
 import { TownsServiceClient } from './generated/client';
 // eslint-disable-next-line no-var
 
-const supUrl = process.env.REACT_APP_SUPABASE_URL;
-const supKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+const SUP_URL = process.env.REACT_APP_SUPABASE_URL;
+const SUP_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 function App() {
   const [user, setUser] = useState({});
 
   const supabase = createClient(
-    supUrl ?? '',
-    supKey ?? '', // eslint-disable-line no-undef
+    SUP_URL ?? '',
+    SUP_KEY ?? '', // eslint-disable-line no-undef
   );
 
   function handleCallbackResponse(response: any) {}
@@ -40,6 +40,7 @@ function App() {
 
   const { error, setError } = useAppState();
   const connectionOptions = useConnectionOptions();
+  const settingsContext = useModalDisclosure();
   const onDisconnect = useCallback(() => {
     townController?.disconnect();
   }, [townController]);
@@ -56,7 +57,7 @@ function App() {
     );
   } else {
     page = (
-      <SettingsModalContext.Provider value={useModalDisclosure()}>
+      <SettingsModalContext.Provider value={settingsContext}>
         <PreJoinScreens />
       </SettingsModalContext.Provider>
     );
@@ -68,7 +69,13 @@ function App() {
   const authService = supabase;
   return (
     <LoginControllerContext.Provider
-      value={{ setTownController, setAuthClient, townsService, usersService, supabaseService: authService }}>
+      value={{
+        setTownController,
+        setAuthClient,
+        townsService,
+        usersService,
+        supabaseService: authService,
+      }}>
       <UnsupportedBrowserWarning>
         <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>
           <ErrorDialog dismissError={() => setError(null)} error={error} />

@@ -1,13 +1,11 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import React from 'react';
 import TownController from '../classes/TownController';
-import { TownsService } from '../generated/client';
-import { UsersService } from '../generated/client';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { TownsService, UsersService } from '../generated/client';
 
 export type LoginController = {
   setTownController: (newController: TownController | null) => void;
   setAuthClient: (newAuthClient: SupabaseClient | null) => void;
-
 
   townsService: TownsService;
   usersService: UsersService;

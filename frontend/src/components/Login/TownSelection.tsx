@@ -203,18 +203,18 @@ export default function TownSelection(): JSX.Element {
   };
 
   /* --------------------- Authentication Functions -------------------- */
+  // Get session data from Supabase
+  const getSessionData = async () => {
+    const session = await supabaseService.auth.getSession();
+    setSessionData(session.data.session);
+  };
+
   // Handles the sign in process
   useEffect(() => {
     const session = supabaseService.auth.getSession();
     setSignedIn(!!session);
     getSessionData();
   }, [supabaseService]);
-
-  // Get session data from Supabase
-  const getSessionData = async () => {
-    const session = await supabaseService.auth.getSession();
-    setSessionData(session.data.session);
-  };
 
   // Update user state when user logs in
   useEffect(() => {
