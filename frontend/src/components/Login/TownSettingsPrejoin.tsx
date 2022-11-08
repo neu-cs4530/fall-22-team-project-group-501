@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import assert from 'assert';
@@ -179,3 +180,43 @@ function TownSettingsPrejoin(props: any): JSX.Element {
 }
 
 export default TownSettingsPrejoin;
+
+// Provider hook that creates modal object and handles state
+export function useModalDisclosure() {
+  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  const editingTown = React.useRef<TownController | null>(null);
+  const didFindTown = React.useRef<boolean>(false);
+
+  const setDidFindTown = (setFound: boolean) => {
+    didFindTown.current = setFound;
+    console.log('didFindTown', didFindTown.current);
+  };
+
+  const isModalOpen = () => {
+    return isOpen;
+  };
+  const closeModal = () => {
+    onClose();
+    return onClose;
+  };
+  const openModal = () => {
+    onOpen();
+    return onOpen;
+  };
+
+  const setEditingTown = (newController: TownController | null) => {
+    editingTown.current = newController;
+  };
+
+  const getEditingTown = () => {
+    return editingTown.current;
+  };
+
+  return {
+    openModal,
+    closeModal,
+    isModalOpen,
+    setEditingTown,
+    getEditingTown,
+  };
+}
