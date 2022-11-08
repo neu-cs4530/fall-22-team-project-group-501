@@ -64,10 +64,11 @@ function App() {
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
   const townsService = new TownsServiceClient({ BASE: url }).towns;
+  const usersService = new TownsServiceClient({ BASE: url }).users;
   const authService = supabase;
   return (
     <LoginControllerContext.Provider
-      value={{ setTownController, setAuthClient, townsService, supabaseService: authService }}>
+      value={{ setTownController, setAuthClient, townsService, usersService, supabaseService: authService }}>
       <UnsupportedBrowserWarning>
         <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>
           <ErrorDialog dismissError={() => setError(null)} error={error} />
