@@ -1,12 +1,19 @@
-import { UseDisclosureReturn } from '@chakra-ui/react';
+import { ChakraProvider, UseDisclosureReturn } from '@chakra-ui/react';
 import '@testing-library/jest-dom';
-import { mock } from 'jest-mock-extended';
+import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
+import { mock, mockClear, MockProxy } from 'jest-mock-extended';
+import { nanoid } from 'nanoid';
+import React from 'react';
+import TownController from '../../classes/TownController';
+import TownControllerContext from '../../contexts/TownControllerContext';
+import { mockTownController } from '../../TestUtils';
+import TownSettings from './TownSettings';
 
 const mockToast = jest.fn();
 const mockUseDisclosure = mock<UseDisclosureReturn>();
 mockUseDisclosure.isOpen = true;
 
-/* jest.mock('@chakra-ui/react', () => {
+jest.mock('@chakra-ui/react', () => {
   const ui = jest.requireActual('@chakra-ui/react');
   return {
     ...ui,
@@ -250,4 +257,4 @@ describe('Town Settings Panel', () => {
       expect(mockedTownController.updateTown).not.toBeCalled();
     }, 10000);
   });
-}); */
+});
