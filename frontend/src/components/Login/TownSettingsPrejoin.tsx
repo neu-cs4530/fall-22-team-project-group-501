@@ -13,22 +13,22 @@ import {
   ModalOverlay,
   useToast,
 } from '@chakra-ui/react';
+import assert from 'assert';
 import React, { useCallback, useState } from 'react';
 import TownController from '../../classes/TownController'; // e
 import useSettings from '../../hooks/useSettings';
 
 function TownSettingsPrejoin(props: any): JSX.Element {
   // Use the ModalContext to get the modal state and functions
+  const toast = useToast();
   const settings = useSettings();
   const { isModalOpen, openModal, closeModal } = settings;
   const { getEditingTown, setEditingTown } = settings;
 
   const editingTown = getEditingTown();
 
-  if (!editingTown) {
-    console.log('editingTown is null');
-    return <></>;
-  }
+  // Ensure that editingTown is not null
+  assert(editingTown !== null);
 
   const coveyTownController: TownController = editingTown;
   const [friendlyName, setFriendlyName] = useState<string>(coveyTownController.friendlyName);
@@ -40,11 +40,8 @@ function TownSettingsPrejoin(props: any): JSX.Element {
   const closeSettings = useCallback(() => {
     closeModal();
     setEditingTown(null);
-   
-    //coveyTownController.unPause();
   }, [settings, coveyTownController]);
 
-  const toast = useToast();
   const processUpdates = async (action: string) => {
     if (action === 'delete') {
       try {
