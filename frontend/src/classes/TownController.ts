@@ -172,7 +172,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   private _sessionToken?: string;
 
   /**
-   * A secret token that is provided by the townsService when we connect, and can be used to connect
+   * A secret token tha t is provided by the townsService when we connect, and can be used to connect
    * to a third-party video conferecing service.
    */
   private _providerVideoToken?: string;
@@ -202,7 +202,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         more than 10 listeners because each conversation area might be its own listener, and there are more than 10
         */
     this.setMaxListeners(30);
-
+    console.log('Connecting to town', townID);
     const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
     assert(url);
     this._socket = io(url, { auth: { userName, townID } });
