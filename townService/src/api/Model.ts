@@ -76,8 +76,4 @@ export interface User {
    * The email of the user
    */
   email: string;
-  /**
-   * A list of Town IDs (which are strings) that the user has created
-   */
-  userTowns: string[];
 }
