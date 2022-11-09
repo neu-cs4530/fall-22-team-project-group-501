@@ -111,7 +111,8 @@ export default function RoomNameScreen({
             type='submit'
             color='primary'
             disabled={!name || !roomName}
-            className={classes.continueButton}>
+            className={classes.continueButton}
+          >
             Continue
           </Button>
         </Grid>
