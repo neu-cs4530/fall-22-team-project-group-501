@@ -41,7 +41,6 @@ function App() {
 
   const { error, setError } = useAppState();
   const connectionOptions = useConnectionOptions();
-  const settingsContext = useModalDisclosure();
   const onDisconnect = useCallback(() => {
     townController?.disconnect();
   }, [townController]);
@@ -58,9 +57,7 @@ function App() {
     );
   } else {
     page = (
-      <SettingsModalContext.Provider value={settingsContext}>
         <PreJoinScreens />
-      </SettingsModalContext.Provider>
     );
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;

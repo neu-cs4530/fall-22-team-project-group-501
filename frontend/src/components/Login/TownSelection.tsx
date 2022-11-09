@@ -24,18 +24,20 @@ import assert from 'assert';
 import React, { useCallback, useEffect, useState } from 'react'; // eslint-disable-line no-unused-vars
 import { User as LocalUser } from '../../../../townService/src/api/Model'; // eslint-disable-line no-unused-vars
 import TownController from '../../classes/TownController';
+import SettingsModalContext from '../../contexts/SettingsModalContext';
 import { Town } from '../../generated/client';
 import useLoginController from '../../hooks/useLoginController';
 import useSettings from '../../hooks/useSettings';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import SettingsIcon from '../VideoCall/VideoFrontend/icons/SettingsIcon';
-import TownSettingsPrejoin from './TownSettingsPrejoin';
+import TownSettingsPrejoin, { useModalDisclosure } from './TownSettingsPrejoin';
 
 export default function TownSelection(): JSX.Element {
   // Contexts
   const toast = useToast();
   const { connect: videoConnect } = useVideoContext();
   const loginController = useLoginController();
+  const settingsContext = useModalDisclosure();
   const settings = useSettings();
 
   // Town states
@@ -276,7 +278,7 @@ export default function TownSelection(): JSX.Element {
   );
 
   return (
-    <>
+    <SettingsModalContext.Provider value={settingsContext}>
       {!signedIn && !signedInAsGuest ? (
         <Stack>
           <Box p='4' borderWidth='1px' borderRadius='lg'>
@@ -508,6 +510,6 @@ export default function TownSelection(): JSX.Element {
           </Stack>
         ) : null}
       </form>
-    </>
+    </SettingsModalContext.Provider>
   );
 }
