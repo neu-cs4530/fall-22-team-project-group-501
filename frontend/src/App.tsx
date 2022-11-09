@@ -26,8 +26,6 @@ const SUP_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUP_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 function App() {
-  const [user, setUser] = useState({});
-
   const supabase = createClient(SUP_URL ?? '', SUP_KEY ?? '');
 
   const [townController, setTownController] = useState<TownController | null>(null);
@@ -56,6 +54,8 @@ function App() {
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
+
+  // Set up the townsService and usersService clients
   const townsService = new TownsServiceClient({ BASE: url }).towns;
   const usersService = new TownsServiceClient({ BASE: url }).users;
   const authService = supabase;
