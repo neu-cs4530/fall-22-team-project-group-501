@@ -30,7 +30,7 @@ export default class UsersStore {
     if (error) {
       throw new Error(`Could not load existing users. Failed with error: ${error}`);
     }
-    data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email));
+    data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email, user.userTowns));
   }
 
   /**
@@ -78,7 +78,7 @@ export default class UsersStore {
     }
     if (data && data.length > 0) {
       const dbUser = data[0];
-      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
+      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email, dbUser.userTowns);
     }
     return undefined;
   }
@@ -88,10 +88,11 @@ export default class UsersStore {
    * @param userID userID of the user to add
    * @param nickname nickname of the user to add
    * @param email email of the user to add
+   * @param userTowns the towns of the user to add
    * @returns the user that was added
    */
-  public _addExistingUser(userID: string, nickname: string | null, email: string | null): User {
-    const newUser = new User(userID, email, nickname);
+  public _addExistingUser(userID: string, nickname: string | null, email: string | null, userTowns: string[]): User {
+    const newUser = new User(userID, email, nickname, userTowns);
     this._users.set(userID, newUser);
     return newUser;
   }
@@ -106,6 +107,7 @@ export default class UsersStore {
       userID,
       email: user.email,
       nickname: user.nickname,
+      userTowns: user.userTowns
     }));
   }
 }

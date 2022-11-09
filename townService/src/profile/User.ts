@@ -12,6 +12,8 @@ export default class User {
 
   private _nickname: string | null;
 
+  private _userTowns: string[] = [];
+
   get userID(): string {
     return this._userID;
   }
@@ -41,13 +43,22 @@ export default class User {
     this._nickname = newNickname;
   }
 
-  constructor(userID: string, email: string | null, nickname: string | null) {
+  set userTowns(userTowns: string[]) {
+    this._userTowns = userTowns;
+  }
+
+  get userTowns() : string[] {
+    return this._userTowns;
+  }
+
+  constructor(userID: string, email: string | null, nickname: string | null, userTowns: string[]) {
     this._userID = userID;
     this._email = email;
     this._nickname = nickname;
+    this._userTowns = userTowns;
   }
 
   public toModel(): UserModel {
-    return { userID: this.userID, nickname: this.nickname, email: this.email };
+    return { userID: this.userID, nickname: this.nickname, email: this.email, userTowns: this.userTowns };
   }
 }
