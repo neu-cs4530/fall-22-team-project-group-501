@@ -6,7 +6,6 @@ import React, { useCallback, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import TownController from './classes/TownController';
-import { useModalDisclosure } from './components/Login/TownSettingsPrejoin';
 import TownMap from './components/Town/TownMap';
 import { ChatProvider } from './components/VideoCall/VideoFrontend/components/ChatProvider';
 import ErrorDialog from './components/VideoCall/VideoFrontend/components/ErrorDialog/ErrorDialog';
@@ -18,7 +17,6 @@ import theme from './components/VideoCall/VideoFrontend/theme';
 import useConnectionOptions from './components/VideoCall/VideoFrontend/utils/useConnectionOptions/useConnectionOptions';
 import VideoOverlay from './components/VideoCall/VideoOverlay/VideoOverlay';
 import LoginControllerContext from './contexts/LoginControllerContext';
-import SettingsModalContext from './contexts/SettingsModalContext';
 import TownControllerContext from './contexts/TownControllerContext';
 import { TownsServiceClient } from './generated/client';
 // eslint-disable-next-line no-var
@@ -56,9 +54,7 @@ function App() {
       </TownControllerContext.Provider>
     );
   } else {
-    page = (
-        <PreJoinScreens />
-    );
+    page = <PreJoinScreens />;
   }
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
