@@ -16,9 +16,14 @@ import {
 } from '@chakra-ui/react';
 import assert from 'assert';
 import React, { useCallback, useState } from 'react';
-import TownController from '../../classes/TownController'; // e
+import TownController from '../../classes/TownController';
 import useSettings from '../../hooks/useSettings';
 
+/*
+ * Modified version TownSettings.tsx to be used in the prejoin screen
+ * this allows admin to set the town settings without having to join the town
+ * uses SettingsModalContext to keep track of the modal state and current town being modified.
+ */
 function TownSettingsPrejoin(props: any): JSX.Element {
   // Use the ModalContext to get the modal state and functions
   const toast = useToast();
@@ -99,7 +104,6 @@ function TownSettingsPrejoin(props: any): JSX.Element {
 
   return (
     <>
-      {/* <Button onClick={openSettings}>Settings</Button> */}
       <Modal
         isOpen={isModalOpen()}
         onClose={() => {

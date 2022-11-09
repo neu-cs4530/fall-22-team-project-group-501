@@ -1,7 +1,9 @@
 import { Heading, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import OAuthScreen from '../../../../Login/OAuthScreen';
+import SettingsModalContext from '../../../../../contexts/SettingsModalContext';
+import useSettings from '../../../../../hooks/useSettings';
 import TownSelection from '../../../../Login/TownSelection';
+import { useModalDisclosure } from '../../../../Login/TownSettingsPrejoin';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { useAppState } from '../../state';
 import IntroContainer from '../IntroContainer/IntroContainer';
@@ -19,6 +21,9 @@ export default function PreJoinScreens() {
 
   const [mediaError, setMediaError] = useState<Error>();
 
+  const settingsContext = useModalDisclosure();
+  const settings = useSettings();
+
   useEffect(() => {
     if (!mediaError) {
       getAudioAndVideoTracks().catch(error => {
@@ -30,18 +35,20 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, mediaError]);
 
   return (
-    <IntroContainer>
-      <MediaErrorSnackbar error={mediaError} />
-      <Heading as='h2' size='xl'>
-        Welcome to Covey.Town!
-      </Heading>
-      <Text p='4'>
-        Covey.Town is a social platform that integrates a 2D game-like metaphor with video chat. To
-        get started, setup your camera and microphone, choose a username, and then create a new town
-        to hang out in, or join an existing one.
-      </Text>
-      <DeviceSelectionScreen />
-      <TownSelection />
-    </IntroContainer>
+    <SettingsModalContext.Provider value={settingsContext}>
+      <IntroContainer>
+        <MediaErrorSnackbar error={mediaError} />
+        <Heading as='h2' size='xl'>
+          Welcome to Covey.Town!
+        </Heading>
+        <Text p='4'>
+          Covey.Town is a social platform that integrates a 2D game-like metaphor with video chat.
+          To get started, setup your camera and microphone, choose a username, and then create a new
+          town to hang out in, or join an existing one.
+        </Text>
+        <DeviceSelectionScreen />
+        <TownSelection />
+      </IntroContainer>
+    </SettingsModalContext.Provider>
   );
 }

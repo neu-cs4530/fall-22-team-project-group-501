@@ -6,6 +6,7 @@ import React, { useCallback, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import TownController from './classes/TownController';
+import { useModalDisclosure } from './components/Login/TownSettingsPrejoin';
 import TownMap from './components/Town/TownMap';
 import { ChatProvider } from './components/VideoCall/VideoFrontend/components/ChatProvider';
 import ErrorDialog from './components/VideoCall/VideoFrontend/components/ErrorDialog/ErrorDialog';
@@ -17,9 +18,9 @@ import theme from './components/VideoCall/VideoFrontend/theme';
 import useConnectionOptions from './components/VideoCall/VideoFrontend/utils/useConnectionOptions/useConnectionOptions';
 import VideoOverlay from './components/VideoCall/VideoOverlay/VideoOverlay';
 import LoginControllerContext from './contexts/LoginControllerContext';
+import SettingsModalContext from './contexts/SettingsModalContext';
 import TownControllerContext from './contexts/TownControllerContext';
 import { TownsServiceClient } from './generated/client';
-// eslint-disable-next-line no-var
 
 const SUP_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUP_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
@@ -27,15 +28,12 @@ const SUP_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 function App() {
   const [user, setUser] = useState({});
 
-  const supabase = createClient(
-    SUP_URL ?? '',
-    SUP_KEY ?? '', // eslint-disable-line no-undef
-  );
-
-  function handleCallbackResponse(response: any) {}
+  const supabase = createClient(SUP_URL ?? '', SUP_KEY ?? '');
 
   const [townController, setTownController] = useState<TownController | null>(null);
-  const [authClient, setAuthClient] = useState<SupabaseClient | null>(null); // eslint-disable-line no-unused-vars
+  const [authClient, setAuthClient] = useState<SupabaseClient | null>(null);
+
+  const settingsContext = useModalDisclosure();
 
   const { error, setError } = useAppState();
   const connectionOptions = useConnectionOptions();
@@ -62,21 +60,23 @@ function App() {
   const usersService = new TownsServiceClient({ BASE: url }).users;
   const authService = supabase;
   return (
-    <LoginControllerContext.Provider
-      value={{
-        setTownController,
-        setAuthClient,
-        townsService,
-        usersService,
-        supabaseService: authService,
-      }}>
-      <UnsupportedBrowserWarning>
-        <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>
-          <ErrorDialog dismissError={() => setError(null)} error={error} />
-          {page}
-        </VideoProvider>
-      </UnsupportedBrowserWarning>
-    </LoginControllerContext.Provider>
+    <SettingsModalContext.Provider value={settingsContext}>
+      <LoginControllerContext.Provider
+        value={{
+          setTownController,
+          setAuthClient,
+          townsService,
+          usersService,
+          supabaseService: authService,
+        }}>
+        <UnsupportedBrowserWarning>
+          <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>
+            <ErrorDialog dismissError={() => setError(null)} error={error} />
+            {page}
+          </VideoProvider>
+        </UnsupportedBrowserWarning>
+      </LoginControllerContext.Provider>
+    </SettingsModalContext.Provider>
   );
 }
 
