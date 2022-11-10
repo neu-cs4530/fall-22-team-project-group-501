@@ -1,4 +1,4 @@
-import { Controller, Get, Path, Response, Route, Tags } from 'tsoa';
+import { Controller, Get, Path, Response, Route, Security, Tags } from 'tsoa';
 
 import { User } from '../api/Model';
 import UserClass from './User';
@@ -29,6 +29,7 @@ export class UsersController extends Controller {
    *
    * @param userID  user to retrieve
    */
+  @Security()
   @Get('{userID}')
   public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
     const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);

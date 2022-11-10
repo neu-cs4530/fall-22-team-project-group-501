@@ -9,6 +9,7 @@
     "tags": [{ "name": "town" }]
   },
   "routes": {
+    "authenticationModule": "./api/authenticate.ts",
     "routesDir": "generated",
     "basePath": "/"
   }
