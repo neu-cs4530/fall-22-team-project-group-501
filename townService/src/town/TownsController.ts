@@ -14,9 +14,11 @@ import {
   Tags,
 } from 'tsoa';
 
-import { Town, TownCreateParams, TownCreateResponse } from '../api/Model';
+import { Town, TownCreateParams, TownCreateResponse, User } from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
 import CoveyTownsStore from '../lib/TownsStore';
+import UsersStore from '../profile/UsersStore';
+import UserClass from '../profile/User';
 import {
   ConversationArea,
   CoveyTownSocket,
@@ -33,6 +35,7 @@ import {
 // eslint-disable-next-line import/prefer-default-export
 export class TownsController extends Controller {
   private _townsStore: CoveyTownsStore = CoveyTownsStore.getInstance();
+  private _usersStore: UsersStore = UsersStore.getInstance();
 
   /**
    * List all towns that are set to be publicly available
@@ -52,13 +55,17 @@ export class TownsController extends Controller {
    * @returns The ID of the newly created town, and a secret password that will be needed to update or delete this town.
    */
   @Example<TownCreateResponse>({ townID: 'stringID', townUpdatePassword: 'secretPassword' })
-  @Post()
-  public async createTown(@Body() request: TownCreateParams): Promise<TownCreateResponse> {
+  @Post('user/{userID}')
+  public async createTown(@Path userID: string, @Body() request: TownCreateParams): Promise<TownCreateResponse> {
     const { townID, townUpdatePassword } = await this._townsStore.createTown(
       request.friendlyName,
       request.isPubliclyListed,
       request.mapFile,
     );
+    
+    const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
+    success.then(user => user?.addTownToUser(townID));
+
     return {
       townID,
       townUpdatePassword,

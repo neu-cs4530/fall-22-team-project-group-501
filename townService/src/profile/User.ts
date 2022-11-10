@@ -61,4 +61,8 @@ export default class User {
   public toModel(): UserModel {
     return { userID: this.userID, nickname: this.nickname, email: this.email, userTowns: this.userTowns };
   }
+
+  public addTownToUser(townID: string) {
+    this.userTowns.push(townID);
+  }
 }

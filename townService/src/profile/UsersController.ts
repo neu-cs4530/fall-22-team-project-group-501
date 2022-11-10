@@ -1,6 +1,7 @@
-import { Controller, Get, Path, Response, Route, Tags } from 'tsoa';
+import { Controller, Get, Post, Path, Response, Route, Tags, Body } from 'tsoa';
 
-import { User } from '../api/Model';
+import { TownCreateParams, User } from '../api/Model';
+import TownsStore from '../lib/TownsStore';
 import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
 
@@ -13,6 +14,7 @@ import CoveyUsersStore from './UsersStore';
 // eslint-disable-next-line import/prefer-default-export
 export class UsersController extends Controller {
   private _usersStore: CoveyUsersStore = CoveyUsersStore.getInstance();
+  private _townsStore: TownsStore = TownsStore.getInstance();
 
   /**
    * List all users
@@ -34,4 +36,17 @@ export class UsersController extends Controller {
     const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
     return success.then(user => user?.toModel());
   }
+
+  // @Post('{userID}/town')
+  // public async addTown(@Path() userID: string,  @Body() request: TownCreateParams): Promise<User | undefined> {
+  //   const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
+  //   const { townID, townUpdatePassword } = await this._townsStore.createTown(
+  //     request.friendlyName,
+  //     request.isPubliclyListed,
+  //     request.mapFile,
+  //   );
+  //   success.then(user => user?.addTownToUser(townID));
+
+  //   return success.then(user => user?.toModel());
+  // }
 }
