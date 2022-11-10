@@ -44,8 +44,24 @@ function TownSettingsPrejoin(props: any): JSX.Element {
   const [roomUpdatePassword, setRoomUpdatePassword] = useState<string>('');
 
   const closeSettings = useCallback(() => {
+    /* async function updateRoom() {
+      try {
+        await coveyTownController.disconnect();
+      } catch (err) {
+        toast({
+          title: 'Error',
+          description: `Error updating room: ${err}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+    updateRoom(); */
     closeModal();
-    setEditingTown(null);
+    // setEditingTown(null);
+    coveyTownController.disconnect();
+    console.log('disconnecting');
   }, [settings, coveyTownController]);
 
   const processUpdates = async (action: string) => {

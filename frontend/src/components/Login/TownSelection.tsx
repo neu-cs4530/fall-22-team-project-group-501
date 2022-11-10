@@ -59,7 +59,7 @@ export default function TownSelection(): JSX.Element {
 
   // Admin settings states
   // TODO: fetch adminTownIDList from db
-  const adminTownIDList = ['6287E581', '3973DBE9'];
+  const adminTownIDList = ['3F672775', '3973DBE9'];
   const { isModalOpen, openModal, closeModal } = settings;
   const { setEditingTown, getEditingTown } = settings;
   const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
