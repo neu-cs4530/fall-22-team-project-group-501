@@ -108,8 +108,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
         isOpen={isModalOpen()}
         onClose={() => {
           closeModal();
-        }}
-      >
+        }}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -120,8 +119,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
             onSubmit={ev => {
               ev.preventDefault();
               processUpdates('edit');
-            }}
-          >
+            }}>
             <ModalBody pb={6}>
               <FormControl>
                 <FormLabel htmlFor='friendlyName'>Friendly Name</FormLabel>
@@ -164,8 +162,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
                 mr={3}
                 value='delete'
                 name='action1'
-                onClick={() => processUpdates('delete')}
-              >
+                onClick={() => processUpdates('delete')}>
                 Delete
               </Button>
               <Button
@@ -174,8 +171,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
                 mr={3}
                 value='update'
                 name='action2'
-                onClick={() => processUpdates('edit')}
-              >
+                onClick={() => processUpdates('edit')}>
                 Update
               </Button>
               <Button onClick={() => closeSettings()}>Cancel</Button>

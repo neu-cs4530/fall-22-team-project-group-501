@@ -86,8 +86,7 @@ export default function SelectVideoModal({
       onClose={() => {
         closeModal();
         coveyTownController.unPause();
-      }}
-    >
+      }}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Pick a video to watch in {viewingAreaController?.id} </ModalHeader>
@@ -96,8 +95,7 @@ export default function SelectVideoModal({
           onSubmit={ev => {
             ev.preventDefault();
             createViewingArea();
-          }}
-        >
+          }}>
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel htmlFor='video'>Video URL</FormLabel>

@@ -353,8 +353,7 @@ export default function TownSelection(): JSX.Element {
                 supabaseService.auth.signOut();
                 setSignedIn(false);
                 setSignedInAsGuest(false);
-              }}
-            >
+              }}>
               Sign Out
             </Button>
             {/* Log Users */}
@@ -423,8 +422,7 @@ export default function TownSelection(): JSX.Element {
                         <Td role='cell'></Td>
                         <Button
                           onClick={() => handleJoin(town.townID)}
-                          disabled={town.currentOccupancy >= town.maximumOccupancy}
-                        >
+                          disabled={town.currentOccupancy >= town.maximumOccupancy}>
                           Connect
                         </Button>
                         {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
@@ -435,8 +433,7 @@ export default function TownSelection(): JSX.Element {
                             handleEdit(town.townID);
                             // use context to call openModal from provider
                             openModal();
-                          }}
-                        ></CustomButton>
+                          }}></CustomButton>
                         {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
                         {foundEditingTown ? (
                           // #TODO: figure out best way to destroy modal when done editing town so values don't persist
@@ -500,8 +497,7 @@ export default function TownSelection(): JSX.Element {
                           {town.currentOccupancy}/{town.maximumOccupancy}
                           <Button
                             onClick={() => handleJoin(town.townID)}
-                            disabled={town.currentOccupancy >= town.maximumOccupancy}
-                          >
+                            disabled={town.currentOccupancy >= town.maximumOccupancy}>
                             Connect
                           </Button>
                         </Td>
