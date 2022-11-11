@@ -1,1 +1,1 @@
-web: node services/townService/build/server.js
+web: node --es-module-specifier-resolution=node townService/build/src/Server.js
