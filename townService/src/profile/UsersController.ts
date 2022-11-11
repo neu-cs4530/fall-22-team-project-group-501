@@ -1,4 +1,4 @@
-import { Controller, Get, Path, Response, Route, Security, Tags } from 'tsoa';
+import { Controller, Get, Path, Route, Security, Tags } from 'tsoa';
 import { Scopes } from '../api/authenticate';
 
 import { User } from '../api/Model';
@@ -22,7 +22,7 @@ export class UsersController extends Controller {
    */
   @Get()
   public async listUsers(): Promise<User[]> {
-    return await this._usersStore.getUsers();
+    return this._usersStore.getUsers();
   }
 
   /**
