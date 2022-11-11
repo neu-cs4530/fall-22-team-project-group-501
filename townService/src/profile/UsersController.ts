@@ -1,4 +1,5 @@
 import { Controller, Get, Path, Response, Route, Security, Tags } from 'tsoa';
+import { Scopes } from '../api/authenticate';
 
 import { User } from '../api/Model';
 import UserClass from './User';
@@ -29,7 +30,7 @@ export class UsersController extends Controller {
    *
    * @param userID  user to retrieve
    */
-  @Security('jwt')
+  @Security('jwt', [Scopes.User])
   @Get('{userID}')
   public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
     const user: UserClass | undefined = await this._usersStore.getUserByID(userID);
