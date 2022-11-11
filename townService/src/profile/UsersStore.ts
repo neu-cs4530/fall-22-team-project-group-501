@@ -67,7 +67,7 @@ export default class UsersStore {
    * Refreshes the UsersStore to be in sync with the database
    */
   public async refreshStore(): Promise<void> {
-    this._loadExistingUsers();
+    await this._loadExistingUsers();
   }
 
   private async _getUserFromDB(userID: string) {

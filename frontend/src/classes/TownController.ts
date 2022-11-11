@@ -7,7 +7,7 @@ import TypedEmitter from 'typed-emitter';
 import Interactable from '../components/Town/Interactable';
 import ViewingArea from '../components/Town/interactables/ViewingArea';
 import { LoginController } from '../contexts/LoginControllerContext';
-import { TownsService, TownsServiceClient } from '../generated/client';
+import { TownsService, TownsServiceClient, UsersService } from '../generated/client';
 import useTownController from '../hooks/useTownController';
 import {
   ChatMessage,

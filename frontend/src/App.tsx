@@ -68,7 +68,8 @@ function App() {
           townsService,
           usersService,
           supabaseService: authService,
-        }}>
+        }}
+      >
         <UnsupportedBrowserWarning>
           <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>
             <ErrorDialog dismissError={() => setError(null)} error={error} />

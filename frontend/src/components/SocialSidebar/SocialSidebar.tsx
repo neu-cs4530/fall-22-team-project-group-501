@@ -14,7 +14,8 @@ export default function SocialSidebar(): JSX.Element {
       borderColor='gray.500'
       height='100%'
       divider={<StackDivider borderColor='gray.200' />}
-      borderRadius='4px'>
+      borderRadius='4px'
+    >
       <Heading fontSize='xl' as='h1'>
         Players In This Town
       </Heading>

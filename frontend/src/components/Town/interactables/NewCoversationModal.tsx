@@ -80,7 +80,8 @@ export default function NewConversationModal(): JSX.Element {
       onClose={() => {
         closeModal();
         coveyTownController.unPause();
-      }}>
+      }}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Create a conversation in {newConversation?.name} </ModalHeader>
@@ -89,7 +90,8 @@ export default function NewConversationModal(): JSX.Element {
           onSubmit={ev => {
             ev.preventDefault();
             createConversation();
-          }}>
+          }}
+        >
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel htmlFor='topic'>Topic of Conversation</FormLabel>

@@ -21,7 +21,7 @@ export class UsersController extends Controller {
    */
   @Get()
   public async listUsers(): Promise<User[]> {
-    return this._usersStore.getUsers();
+    return await this._usersStore.getUsers();
   }
 
   /**
@@ -29,10 +29,10 @@ export class UsersController extends Controller {
    *
    * @param userID  user to retrieve
    */
-  @Security()
+  @Security('jwt')
   @Get('{userID}')
   public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
-    const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
-    return success.then(user => user?.toModel());
+    const user: UserClass | undefined = await this._usersStore.getUserByID(userID);
+    return user?.toModel();
   }
 }
