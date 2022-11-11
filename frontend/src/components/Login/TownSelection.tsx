@@ -224,7 +224,6 @@ export default function TownSelection(): JSX.Element {
         setUserName(user.id);
       }
       OpenAPI.TOKEN = sessionData.access_token;
-      console.log(OpenAPI.TOKEN);
     }
   }, [sessionData]);
 
