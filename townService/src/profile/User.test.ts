@@ -6,10 +6,11 @@ describe('User', () => {
   const testUserID = nanoid();
   const testUserEmail = 'test@gmail.com';
   const testUserNickname = 'test';
+  const testUserTownsList = ['town1'];
   let user: User;
 
   beforeEach(() => {
-    user = new User(testUserID, testUserEmail, testUserNickname);
+    user = new User(testUserID, testUserEmail, testUserNickname, testUserTownsList);
   });
 
   describe('userID', () => {
@@ -44,12 +45,20 @@ describe('User', () => {
       expect(user.nickname).toBe('');
     });
   });
+  describe('userTowns', () => {
+    it('Can be gotten after being set', () => {
+      expect(user.userTowns).toBe(testUserTownsList);
+      user.userTowns.push('another Town');
+      expect(user.userTowns).toBe(['town1', 'another Town'])
+    });
+  });
 
   describe('toModel', () => {
     const userModel: UserModel = {
       userID: testUserID,
       nickname: testUserNickname,
       email: testUserEmail,
+      userTowns: testUserTownsList,
     };
 
     it('Properly converts a user to a model', () => {
@@ -59,7 +68,19 @@ describe('User', () => {
         userID: testUserID,
         nickname: testUserNickname,
         email: 'testemail@gmail.com',
+        userTowns: ['town1']
       });
     });
+  });
+
+  describe('addTownToUser', () => {
+    it('Properly adds a town to a users towns', () => {
+      expect(user.userTowns).toBe(testUserTownsList);
+      expect(user.userTowns.length).toBe(1);
+      user.addTownToUser('another town');
+      expect(user.userTowns.length).toBe(2);
+    });
+
+    /* TEST MORE FAULTS ?? */
   });
 });
