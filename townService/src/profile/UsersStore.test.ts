@@ -1,14 +1,16 @@
 import { nanoid } from 'nanoid';
 import UsersStore from './UsersStore';
 import { User as UserModel } from '../api/Model';
+import User from './User';
+import UsersDom from './UsersDom';
 
 describe('UsersStore', () => {
   const loadUsersSpy: jest.SpyInstance = jest
-    .spyOn(UsersStore.prototype as any, '_loadExistingUsers')
-    .mockImplementation(() => undefined);
+    .spyOn(UsersDom, 'loadExistingUsers')
+    .mockImplementation(() => Promise.resolve([]));
   const getUserFromDBSpy: jest.SpyInstance = jest
-    .spyOn(UsersStore.prototype as any, '_getUserFromDB')
-    .mockImplementation(() => undefined);
+    .spyOn(UsersDom, 'getUserFromDB')
+    .mockImplementation(() => Promise.resolve(undefined));
   let usersStore: UsersStore = UsersStore.getInstance();
 
   beforeEach(() => {
@@ -90,6 +92,45 @@ describe('UsersStore', () => {
       const user3 = usersStore._addExistingUser(testID2, 'nickname', 'email').toModel();
       users = await usersStore.getUsers();
       expect(users).toEqual(expect.arrayContaining([user1, user3]));
+    });
+  });
+
+  describe(usersStore.addTownToUser, () => {
+    const townID1 = nanoid();
+    const townID2 = nanoid();
+    const userID1 = nanoid();
+    const userID2 = nanoid();
+
+    const userNickname1 = 'nickname1';
+    const userEmail1 = 'email1';
+    const userNickname2 = 'nickname2';
+    const userEmail2 = 'email2';
+    let user1: User;
+    let user2: User;
+
+    beforeEach(() => {
+      user1 = usersStore._addExistingUser(userID1, userNickname1, userEmail1);
+      user2 = usersStore._addExistingUser(userID2, userNickname2, userEmail2);
+    });
+    it('Adds the given townID to the user', async () => {
+      usersStore.addTownToUser(user1.userID, townID1);
+      const townIDs: string[] = await usersStore
+        .getUserByID(user1.userID)
+        .then(user => user?.townIDs ?? []);
+      expect(townIDs).toEqual(expect.arrayContaining([townID1]));
+    });
+
+    it('Adds the given townID to the users individually', async () => {
+      usersStore.addTownToUser(user1.userID, townID1);
+      usersStore.addTownToUser(user2.userID, townID2);
+      const townIDs1: string[] = await usersStore
+        .getUserByID(user1.userID)
+        .then(user => user?.townIDs ?? []);
+      const townIDs2: string[] = await usersStore
+        .getUserByID(user2.userID)
+        .then(user => user?.townIDs ?? []);
+      expect(townIDs1).toEqual(expect.arrayContaining([townID1]));
+      expect(townIDs2).toEqual(expect.arrayContaining([townID2]));
     });
   });
 });

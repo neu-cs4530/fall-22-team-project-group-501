@@ -1,6 +1,6 @@
 import User from './User';
-import supabase from '../supabase/client';
 import { User as UserModel } from '../api/Model';
+import UsersDom, { DBUser } from './UsersDom';
 /**
  * A Store for caching user entries from the database.
  *
@@ -16,21 +16,6 @@ export default class UsersStore {
    */
   static initializeUsersStore() {
     UsersStore._instance = new UsersStore();
-    UsersStore._instance.refreshStore();
-  }
-
-  /**
-   * Loads existing users from the db into the store
-   */
-  private async _loadExistingUsers() {
-    const { data, error } = await supabase.from('users').select('*');
-    if (!data) {
-      throw new Error('Could not load existing users');
-    }
-    if (error) {
-      throw new Error(`Could not load existing users. Failed with error: ${error}`);
-    }
-    data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email));
   }
 
   /**
@@ -47,6 +32,7 @@ export default class UsersStore {
 
   private constructor() {
     this._users = new Map<string, User>();
+    this.refreshStore();
   }
 
   /**
@@ -60,27 +46,20 @@ export default class UsersStore {
       return user;
     }
 
-    return this._getUserFromDB(userID);
+    const dbUser: DBUser | undefined = await UsersDom.getUserFromDB(userID);
+    if (dbUser) {
+      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
+    }
+    return undefined;
   }
 
   /**
    * Refreshes the UsersStore to be in sync with the database
    */
   public async refreshStore(): Promise<void> {
-    this._loadExistingUsers();
-  }
-
-  private async _getUserFromDB(userID: string) {
-    const { data, error } = await supabase.from('users').select('*').eq('id', userID);
-
-    if (error !== null) {
-      throw new Error(`Could not retrieve user from database. Failed with Error: ${error.message}`);
-    }
-    if (data && data.length > 0) {
-      const dbUser = data[0];
-      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
-    }
-    return undefined;
+    (await UsersDom.loadExistingUsers()).forEach(user =>
+      this._addExistingUser(user.id, user.nickname, user.email),
+    );
   }
 
   /**
@@ -100,8 +79,6 @@ export default class UsersStore {
    * @returns List of all publicly visible users
    */
   public async getUsers(): Promise<UserModel[]> {
-    // TODO this is super inefficient
-    await this.refreshStore();
     return Array.from(this._users).map(([userID, user]) => ({
       userID,
       email: user.email,
