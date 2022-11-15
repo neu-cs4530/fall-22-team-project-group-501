@@ -34,6 +34,7 @@ import {
 // eslint-disable-next-line import/prefer-default-export
 export class TownsController extends Controller {
   private _townsStore: CoveyTownsStore = CoveyTownsStore.getInstance();
+
   private _usersStore: CoveyUsersStore = CoveyUsersStore.getInstance();
 
   /**

@@ -4,7 +4,6 @@ import { User, Town } from '../api/Model';
 import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
 import CoveyTownsStore from '../lib/TownsStore';
-import { TownsController } from 'src/town/TownsController';
 
 /**
  * This is the town route
