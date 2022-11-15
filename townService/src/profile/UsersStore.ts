@@ -108,4 +108,11 @@ export default class UsersStore {
       nickname: user.nickname,
     }));
   }
+
+  /**
+   * Adds the given townID to the User
+   */
+  public async addTownToUser(userID: string, townID: string) {
+    this.getUserByID(userID).then(user => user?.addTownID(townID));
+  }
 }
