@@ -64,7 +64,7 @@ export default function TownSelection(): JSX.Element {
   const { setEditingTown, getEditingTown } = settings;
   const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
   // Todo: set states for admin town list?
-  const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>();
+  const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>([]);
 
   // Filters the list of towns to only include towns where the townID is in the adminTownIDList
   /*  const filterAdminTowns = useCallback(() => {
@@ -142,7 +142,7 @@ export default function TownSelection(): JSX.Element {
     if (!userName || userName.length === 0) {
       toast({
         title: 'Unable to create town',
-        description: 'Please select a username before creating a town',
+        description: 'Please login first',
         status: 'error',
       });
       return;
@@ -155,11 +155,13 @@ export default function TownSelection(): JSX.Element {
       });
       return;
     }
+    let userTownID = userName;
     try {
-      const newTownInfo = await townsService.createTown({
+      const newTownInfo = await townsService.createTownForUser(userTownID, {
         friendlyName: newTownName,
         isPubliclyListed: newTownIsPublic,
       });
+      await getUserTowns();
       let privateMessage = <></>;
       if (!newTownIsPublic) {
         privateMessage = (
@@ -184,11 +186,11 @@ export default function TownSelection(): JSX.Element {
         isClosable: true,
         duration: null,
       });
-      await handleJoin(newTownInfo.townID);
+      //await handleJoin(newTownInfo.townID);
     } catch (err) {
       if (err instanceof Error) {
         toast({
-          title: 'Unable to connect to Towns Service',
+          title: 'Not able to connect to Towns Service',
           description: err.toString(),
           status: 'error',
         });
@@ -224,6 +226,8 @@ export default function TownSelection(): JSX.Element {
         setUserName(user.id);
       }
     }
+    getUser();
+    getUserTowns();
   }, [sessionData]);
 
   /* --------------------- Database Functions -------------------- */
@@ -233,6 +237,17 @@ export default function TownSelection(): JSX.Element {
       const currentUser = await usersService.getUserInfo(user.id);
       setLocalUser(currentUser);
       console.log(currentUser);
+      //console.log(usersService.getUserTowns(currentUser.userID));
+      getUserTowns();
+    }
+  };
+
+  // get user towns with usersService.getUserTowns, set currentUserTowns and log it
+  const getUserTowns = async () => {
+    if (localUser) {
+      const userTowns = await usersService.getUserTowns(localUser.userID);
+      setCurrentUserTowns(userTowns);
+      console.log(userTowns);
     }
   };
 
@@ -411,36 +426,34 @@ export default function TownSelection(): JSX.Element {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {currentPublicTowns
-                    ?.filter(town => adminTownIDList.includes(town.townID))
-                    .map(town => (
-                      <Tr key={town.townID}>
-                        <Td role='cell'>{town.friendlyName}</Td>
-                        <Td role='cell'>{town.townID}</Td>
-                        <Td role='cell'></Td>
-                        <Button
-                          onClick={() => handleJoin(town.townID)}
-                          disabled={town.currentOccupancy >= town.maximumOccupancy}>
-                          Connect
-                        </Button>
-                        {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
-                        <CustomButton
-                          data-testid='editTownButton'
-                          startIcon={<SettingsIcon />}
-                          onClick={() => {
-                            handleEdit(town.townID);
-                            // use context to call openModal from provider
-                            openModal();
-                          }}></CustomButton>
-                        {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
-                        {foundEditingTown ? (
-                          // #TODO: figure out best way to destroy modal when done editing town so values don't persist
-                          <TownSettingsPrejoin key={town.townID} />
-                        ) : (
-                          <></>
-                        )}
-                      </Tr>
-                    ))}
+                  {currentUserTowns.map(town => (
+                    <Tr key={town.townID}>
+                      <Td role='cell'>{town.friendlyName}</Td>
+                      <Td role='cell'>{town.townID}</Td>
+                      <Td role='cell'></Td>
+                      <Button
+                        onClick={() => handleJoin(town.townID)}
+                        disabled={town.currentOccupancy >= town.maximumOccupancy}>
+                        Connect
+                      </Button>
+                      {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
+                      <CustomButton
+                        data-testid='editTownButton'
+                        startIcon={<SettingsIcon />}
+                        onClick={() => {
+                          handleEdit(town.townID);
+                          // use context to call openModal from provider
+                          openModal();
+                        }}></CustomButton>
+                      {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
+                      {foundEditingTown ? (
+                        // #TODO: figure out best way to destroy modal when done editing town so values don't persist
+                        <TownSettingsPrejoin key={town.townID} />
+                      ) : (
+                        <></>
+                      )}
+                    </Tr>
+                  ))}
                 </Tbody>
               </Table>
             </Box>
