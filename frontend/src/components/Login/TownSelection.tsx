@@ -59,22 +59,31 @@ export default function TownSelection(): JSX.Element {
 
   // Admin settings states
   // TODO: fetch adminTownIDList from db
-  const adminTownIDList = ['3F672775', '3973DBE9'];
   const { isModalOpen, openModal, closeModal } = settings;
   const { setEditingTown, getEditingTown } = settings;
   const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
   // Todo: set states for admin town list?
   const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>([]);
 
-  // Filters the list of towns to only include towns where the townID is in the adminTownIDList
-  /*  const filterAdminTowns = useCallback(() => {
-    if (currentPublicTowns) {
-      const filteredTowns = currentPublicTowns.filter(town =>
-        adminTownIDList.includes(town.townID),
-      );
-      setCurrentUserTowns(filteredTowns);
+  /* --------------------- Database Functions -------------------- */
+  // get user towns with usersService.getUserTowns, set currentUserTowns and log it
+  const getUserTowns = async () => {
+    if (localUser) {
+      const userTowns = await usersService.getUserTowns(localUser.userID);
+      setCurrentUserTowns(userTowns);
+      console.log(userTowns);
     }
-  }, [currentPublicTowns, adminTownIDList]); */
+  };
+
+  // Gets current user from UsersService endpoint with userID and sets local state
+  const getUser = async () => {
+    if (user) {
+      const currentUser = await usersService.getUserInfo(user.id);
+      setLocalUser(currentUser);
+      console.log(currentUser);
+      getUserTowns();
+    }
+  };
 
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
@@ -155,9 +164,9 @@ export default function TownSelection(): JSX.Element {
       });
       return;
     }
-    let userTownID = userName;
+    // let userTownID = userName;
     try {
-      const newTownInfo = await townsService.createTownForUser(userTownID, {
+      const newTownInfo = await townsService.createTownForUser(userName, {
         friendlyName: newTownName,
         isPubliclyListed: newTownIsPublic,
       });
@@ -229,27 +238,6 @@ export default function TownSelection(): JSX.Element {
     getUser();
     getUserTowns();
   }, [sessionData]);
-
-  /* --------------------- Database Functions -------------------- */
-  // Gets current user from UsersService endpoint with userID and sets local state
-  const getUser = async () => {
-    if (user) {
-      const currentUser = await usersService.getUserInfo(user.id);
-      setLocalUser(currentUser);
-      console.log(currentUser);
-      //console.log(usersService.getUserTowns(currentUser.userID));
-      getUserTowns();
-    }
-  };
-
-  // get user towns with usersService.getUserTowns, set currentUserTowns and log it
-  const getUserTowns = async () => {
-    if (localUser) {
-      const userTowns = await usersService.getUserTowns(localUser.userID);
-      setCurrentUserTowns(userTowns);
-      console.log(userTowns);
-    }
-  };
 
   /* ------------------------ Admin Settings Functions ------------------------ */
   // Sets foundEditingTown to false if no editing town is found
