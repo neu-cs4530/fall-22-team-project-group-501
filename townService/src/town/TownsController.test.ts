@@ -15,6 +15,8 @@ import {
 } from '../TestUtils';
 import { TownsController } from './TownsController';
 
+jest.mock('../profile/UsersDom');
+
 type TestTownData = {
   friendlyName: string;
   townID: string;
