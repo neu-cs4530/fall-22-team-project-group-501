@@ -29,7 +29,7 @@ function App() {
   const supabase = createClient(SUP_URL ?? '', SUP_KEY ?? '');
 
   const [townController, setTownController] = useState<TownController | null>(null);
-  const [authClient, setAuthClient] = useState<SupabaseClient | null>(null);
+  const [, setAuthClient] = useState<SupabaseClient | null>(null);
 
   const settingsContext = useModalDisclosure();
 

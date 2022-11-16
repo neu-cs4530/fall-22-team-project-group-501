@@ -51,15 +51,14 @@ export default function TownSelection(): JSX.Element {
   const [userName, setUserName] = useState<string>('');
 
   // Authentication states
-  const { setAuthClient, supabaseService } = loginController;
-  const { usersService } = loginController;
+  const { supabaseService, usersService } = loginController;
   const [signedIn, setSignedIn] = useState(false);
   const [signedInAsGuest, setSignedInAsGuest] = useState(false);
   const [sessionData, setSessionData] = useState<Session | null>(null);
 
   // Admin settings states
   // TODO: fetch adminTownIDList from db
-  const { isModalOpen, openModal, closeModal } = settings;
+  const { openModal } = settings;
   const { setEditingTown, getEditingTown } = settings;
   const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
   // Todo: set states for admin town list?
@@ -67,23 +66,23 @@ export default function TownSelection(): JSX.Element {
 
   /* --------------------- Database Functions -------------------- */
   // get user towns with usersService.getUserTowns, set currentUserTowns and log it
-  const getUserTowns = async () => {
+  const getUserTowns = useCallback(async () => {
     if (localUser) {
       const userTowns = await usersService.getUserTowns(localUser.userID);
       setCurrentUserTowns(userTowns);
       console.log(userTowns);
     }
-  };
+  }, [localUser, usersService]);
 
   // Gets current user from UsersService endpoint with userID and sets local state
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     if (user) {
       const currentUser = await usersService.getUserInfo(user.id);
       setLocalUser(currentUser);
       console.log(currentUser);
       getUserTowns();
     }
-  };
+  }, [getUserTowns, user, usersService]);
 
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
@@ -215,17 +214,17 @@ export default function TownSelection(): JSX.Element {
 
   /* --------------------- Authentication Functions -------------------- */
   // Get session data from Supabase
-  const getSessionData = async () => {
+  const getSessionData = useCallback(async () => {
     const session = await supabaseService.auth.getSession();
     setSessionData(session.data.session);
-  };
+  }, [supabaseService.auth]);
 
   // Handles the sign in process
   useEffect(() => {
     const session = supabaseService.auth.getSession();
     setSignedIn(!!session);
     getSessionData();
-  }, [supabaseService]);
+  }, [supabaseService, getSessionData]);
 
   // Update user state when user logs in
   useEffect(() => {
@@ -237,7 +236,7 @@ export default function TownSelection(): JSX.Element {
     }
     getUser();
     getUserTowns();
-  }, [sessionData]);
+  }, [sessionData, getUser, getUserTowns, user]);
 
   /* ------------------------ Admin Settings Functions ------------------------ */
   // Sets foundEditingTown to false if no editing town is found
