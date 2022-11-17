@@ -21,7 +21,7 @@ const app = Express();
 const originRegex = new RegExp(process.env.REQUEST_ORIGIN_URL || '.*localhost.*');
 const corsOptions: CorsOptions = {
   origin(origin: string | undefined, callback) {
-    if (originRegex.test(origin ?? '')) {
+    if (!origin || originRegex.test(origin)) {
       callback(null, true);
     } else {
       callback(new AuthError('Origin not allowed by CORS', 503));
@@ -32,7 +32,7 @@ const corsOptions: CorsOptions = {
 app.use(CORS(corsOptions));
 const server = http.createServer(app);
 const socketServer = new SocketServer<ClientToServerEvents, ServerToClientEvents>(server, {
-  cors: { origin: '*' },
+  cors: corsOptions,
 });
 
 // Initialize the towns store with a factory that creates a broadcast emitter for a town

@@ -70,7 +70,6 @@ export default function TownSelection(): JSX.Element {
     if (localUser) {
       const userTowns = await usersService.getUserTowns(localUser.userID);
       setCurrentUserTowns(userTowns);
-      console.log(userTowns);
     }
   }, [localUser, usersService]);
 
@@ -79,10 +78,14 @@ export default function TownSelection(): JSX.Element {
     if (user) {
       const currentUser = await usersService.getUserInfo(user.id);
       setLocalUser(currentUser);
-      console.log(currentUser);
-      getUserTowns();
     }
-  }, [getUserTowns, user, usersService]);
+  }, [user, usersService]);
+
+  const logUser = useCallback(() => {
+    console.log(user);
+    console.log(currentUserTowns);
+    console.log(currentPublicTowns);
+  }, [user]);
 
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
@@ -230,13 +233,18 @@ export default function TownSelection(): JSX.Element {
   useEffect(() => {
     if (sessionData) {
       setUser(sessionData.user);
-      if (user) {
-        setUserName(user.id);
+      if (sessionData.user) {
+        setUserName(sessionData.user.id);
       }
     }
+  }, [sessionData]);
+
+  useEffect(() => {
     getUser();
+  }, [getUser]);
+  useEffect(() => {
     getUserTowns();
-  }, [sessionData, getUser, getUserTowns, user]);
+  }, [getUserTowns]);
 
   /* ------------------------ Admin Settings Functions ------------------------ */
   // Sets foundEditingTown to false if no editing town is found
@@ -358,7 +366,7 @@ export default function TownSelection(): JSX.Element {
               Sign Out
             </Button>
             {/* Log Users */}
-            <Button mt='4' data-testid='logUsersButton' onClick={getUser}>
+            <Button mt='4' data-testid='logUsersButton' onClick={logUser}>
               Log Users
             </Button>
           </Box>

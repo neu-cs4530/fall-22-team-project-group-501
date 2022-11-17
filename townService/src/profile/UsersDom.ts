@@ -27,9 +27,6 @@ export default class UsersDom {
    */
   public static async loadExistingUsers(): Promise<DBUser[]> {
     const { data, error } = await supabase().from('users').select('*');
-    if (!data) {
-      throw new Error('Could not load existing users');
-    }
     if (error) {
       throw new Error(`Could not load existing users. Failed with error: ${error}`);
     }

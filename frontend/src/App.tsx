@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import assert from 'assert';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import TownController from './classes/TownController';
@@ -59,6 +59,7 @@ function App() {
   const townsService = new TownsServiceClient({ BASE: url }).towns;
   const usersService = new TownsServiceClient({ BASE: url }).users;
   const authService = supabase;
+
   return (
     <SettingsModalContext.Provider value={settingsContext}>
       <LoginControllerContext.Provider
