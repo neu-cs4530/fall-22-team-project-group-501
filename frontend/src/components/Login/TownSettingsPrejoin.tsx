@@ -24,12 +24,15 @@ import useSettings from '../../hooks/useSettings';
  * this allows admin to set the town settings without having to join the town
  * uses SettingsModalContext to keep track of the modal state and current town being modified.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 function TownSettingsPrejoin(props: any): JSX.Element {
+  /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+
   // Use the ModalContext to get the modal state and functions
   const toast = useToast();
   const settings = useSettings();
-  const { isModalOpen, openModal, closeModal } = settings;
-  const { getEditingTown, setEditingTown } = settings;
+  const { isModalOpen, closeModal } = settings;
+  const { getEditingTown } = settings;
 
   const editingTown = getEditingTown();
 
@@ -62,7 +65,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
     // setEditingTown(null);
     coveyTownController.disconnect();
     console.log('disconnecting');
-  }, [settings, coveyTownController]);
+  }, [coveyTownController, closeModal]);
 
   const processUpdates = async (action: string) => {
     if (action === 'delete') {
@@ -205,12 +208,12 @@ export default TownSettingsPrejoin;
 export function useModalDisclosure() {
   const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
   const editingTown = React.useRef<TownController | null>(null);
-  const didFindTown = React.useRef<boolean>(false);
+  // const didFindTown = React.useRef<boolean>(false);
 
-  const setDidFindTown = (setFound: boolean) => {
-    didFindTown.current = setFound;
-    console.log('didFindTown', didFindTown.current);
-  };
+  // const setDidFindTown = (setFound: boolean) => {
+  //   didFindTown.current = setFound;
+  //   console.log('didFindTown', didFindTown.current);
+  // };
 
   const isModalOpen = () => {
     return isOpen;

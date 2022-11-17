@@ -1,23 +1,37 @@
 import Express from 'express';
 import * as http from 'http';
-import CORS from 'cors';
+import CORS, { CorsOptions } from 'cors';
 import { AddressInfo } from 'net';
 import swaggerUi from 'swagger-ui-express';
 import { ValidateError } from 'tsoa';
 import fs from 'fs/promises';
 import { Server as SocketServer } from 'socket.io';
+import dotenv from 'dotenv';
 import { RegisterRoutes } from '../generated/routes';
 import TownsStore from './lib/TownsStore';
 import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSocket';
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
 
+dotenv.config();
+
 // Create the server instances
 const app = Express();
-app.use(CORS());
+const originRegex = new RegExp(process.env.REQUEST_ORIGIN_URL || '.*localhost.*');
+const corsOptions: CorsOptions = {
+  origin(origin: string | undefined, callback) {
+    if (!origin || originRegex.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
+  },
+};
+
+app.use(CORS(corsOptions));
 const server = http.createServer(app);
 const socketServer = new SocketServer<ClientToServerEvents, ServerToClientEvents>(server, {
-  cors: { origin: '*' },
+  cors: corsOptions,
 });
 
 // Initialize the towns store with a factory that creates a broadcast emitter for a town
