@@ -293,6 +293,7 @@ export default function TownSelection(): JSX.Element {
               view='sign_in'
               magicLink={true}
               onlyThirdPartyProviders={true}
+              redirectTo={window.location.origin}
             />
           </Box>
           <Heading p='4' as='h2' size='lg'>
