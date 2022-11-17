@@ -12,7 +12,6 @@ import TownsStore from './lib/TownsStore';
 import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSocket';
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
-import { AuthError } from './api/authenticate';
 
 dotenv.config();
 
@@ -24,7 +23,7 @@ const corsOptions: CorsOptions = {
     if (!origin || originRegex.test(origin)) {
       callback(null, true);
     } else {
-      callback(new AuthError('Origin not allowed by CORS', 503));
+      callback(new Error('Origin not allowed by CORS'));
     }
   },
 };
