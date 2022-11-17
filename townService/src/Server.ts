@@ -6,20 +6,20 @@ import swaggerUi from 'swagger-ui-express';
 import { ValidateError } from 'tsoa';
 import fs from 'fs/promises';
 import { Server as SocketServer } from 'socket.io';
+import dotenv from 'dotenv';
 import { RegisterRoutes } from '../generated/routes';
 import TownsStore from './lib/TownsStore';
 import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSocket';
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
-import dotenv from 'dotenv';
 
 dotenv.config();
 
 // Create the server instances
 const app = Express();
-const originRegex: RegExp = new RegExp(process.env.REQUEST_ORIGIN_URL || '*localhost*');
+const originRegex = new RegExp(process.env.REQUEST_ORIGIN_URL || '*localhost*');
 const corsOptions: CorsOptions = {
-  origin: function (origin: string | undefined, callback) {
+  origin(origin: string | undefined, callback) {
     if (originRegex.test(origin ?? '')) {
       callback(null, true);
     } else {

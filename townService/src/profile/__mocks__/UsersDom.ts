@@ -7,6 +7,7 @@ export interface DBUser {
 }
 
 export default class UsersDom {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   public static async getUserFromDB(_userID: string): Promise<DBUser | undefined> {
     return undefined;
   }
