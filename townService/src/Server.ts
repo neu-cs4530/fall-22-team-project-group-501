@@ -12,18 +12,19 @@ import TownsStore from './lib/TownsStore';
 import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSocket';
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
+import { AuthError } from './api/authenticate';
 
 dotenv.config();
 
 // Create the server instances
 const app = Express();
-const originRegex = new RegExp(process.env.REQUEST_ORIGIN_URL || '*localhost*');
+const originRegex = new RegExp(process.env.REQUEST_ORIGIN_URL || '.*localhost.*');
 const corsOptions: CorsOptions = {
   origin(origin: string | undefined, callback) {
     if (originRegex.test(origin ?? '')) {
       callback(null, true);
     } else {
-      callback(new Error('Origin not allowed by CORS'));
+      callback(new AuthError('Origin not allowed by CORS', 503));
     }
   },
 };
