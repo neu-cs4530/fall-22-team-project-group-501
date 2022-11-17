@@ -85,7 +85,7 @@ export default function TownSelection(): JSX.Element {
     console.log(user);
     console.log(currentUserTowns);
     console.log(currentPublicTowns);
-  }, [user]);
+  }, [user, currentUserTowns, currentPublicTowns]);
 
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
