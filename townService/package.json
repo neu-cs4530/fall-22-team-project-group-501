@@ -71,6 +71,7 @@
     "http-status-codes": "^2.2.0",
     "nanoid": "^4.0.0",
     "node-postgres": "^0.6.2",
+    "openapi": "^1.0.1",
     "socket.io": "^4.5.1",
     "swagger-ui-express": "^4.4.0",
     "tsoa": "^4.1.0",
