@@ -57,26 +57,9 @@ export default class UsersStore {
    * Refreshes the UsersStore to be in sync with the database
    */
   public async refreshStore(): Promise<void> {
-<<<<<<< HEAD
-    await this._loadExistingUsers();
-  }
-
-  private async _getUserFromDB(userID: string) {
-    const { data, error } = await supabase.from('users').select('*').eq('id', userID);
-
-    if (error !== null) {
-      throw new Error(`Could not retrieve user from database. Failed with Error: ${error.message}`);
-    }
-    if (data && data.length > 0) {
-      const dbUser = data[0];
-      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
-    }
-    return undefined;
-=======
     (await UsersDom.loadExistingUsers()).forEach(user =>
       this._addExistingUser(user.id, user.nickname, user.email),
     );
->>>>>>> b101669c688e1babd55d2943ac3879c933f5e634
   }
 
   /**

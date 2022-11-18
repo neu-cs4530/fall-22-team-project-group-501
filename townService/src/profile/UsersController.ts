@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import { Controller, Get, Path, Route, Security, Tags } from 'tsoa';
 import { Scopes } from '../api/authenticate';
-=======
-import { Controller, Get, Path, Route, Tags } from 'tsoa';
->>>>>>> b101669c688e1babd55d2943ac3879c933f5e634
 
 import { User, Town } from '../api/Model';
 import UserClass from './User';
