@@ -62,4 +62,17 @@ describe('User', () => {
       });
     });
   });
+
+  describe('addTownID', () => {
+    const townID = nanoid();
+    it('Adds the given townID to the user', () => {
+      expect(user.townIDs).not.toEqual(expect.arrayContaining([townID]));
+      expect(user.townIDs).toHaveLength(0);
+
+      user.addTownID(townID);
+
+      expect(user.townIDs).toEqual(expect.arrayContaining([townID]));
+      expect(user.townIDs).toHaveLength(1);
+    });
+  });
 });

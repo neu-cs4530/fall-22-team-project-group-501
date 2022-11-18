@@ -29,7 +29,7 @@ function App() {
   const supabase = createClient(SUP_URL ?? '', SUP_KEY ?? '');
 
   const [townController, setTownController] = useState<TownController | null>(null);
-  const [authClient, setAuthClient] = useState<SupabaseClient | null>(null);
+  const [, setAuthClient] = useState<SupabaseClient | null>(null);
 
   const settingsContext = useModalDisclosure();
 
@@ -59,6 +59,7 @@ function App() {
   const townsService = new TownsServiceClient({ BASE: url }).towns;
   const usersService = new TownsServiceClient({ BASE: url }).users;
   const authService = supabase;
+
   return (
     <SettingsModalContext.Provider value={settingsContext}>
       <LoginControllerContext.Provider

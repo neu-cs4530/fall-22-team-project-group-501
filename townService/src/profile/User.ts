@@ -12,6 +12,8 @@ export default class User {
 
   private _nickname: string | null;
 
+  private _townIDs: string[];
+
   get userID(): string {
     return this._userID;
   }
@@ -41,10 +43,19 @@ export default class User {
     this._nickname = newNickname;
   }
 
+  get townIDs(): string[] {
+    return this._townIDs;
+  }
+
   constructor(userID: string, email: string | null, nickname: string | null) {
     this._userID = userID;
     this._email = email;
     this._nickname = nickname;
+    this._townIDs = [];
+  }
+
+  public addTownID(id: string) {
+    this._townIDs.push(id);
   }
 
   public toModel(): UserModel {

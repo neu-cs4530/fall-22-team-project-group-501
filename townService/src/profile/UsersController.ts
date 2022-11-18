@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { Controller, Get, Path, Route, Security, Tags } from 'tsoa';
 import { Scopes } from '../api/authenticate';
+=======
+import { Controller, Get, Path, Route, Tags } from 'tsoa';
+>>>>>>> b101669c688e1babd55d2943ac3879c933f5e634
 
-import { User } from '../api/Model';
+import { User, Town } from '../api/Model';
 import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
+import CoveyTownsStore from '../lib/TownsStore';
 
 /**
  * This is the town route
@@ -14,6 +19,8 @@ import CoveyUsersStore from './UsersStore';
 // eslint-disable-next-line import/prefer-default-export
 export class UsersController extends Controller {
   private _usersStore: CoveyUsersStore = CoveyUsersStore.getInstance();
+
+  private _townsStore: CoveyTownsStore = CoveyTownsStore.getInstance();
 
   /**
    * List all users
@@ -35,5 +42,15 @@ export class UsersController extends Controller {
   public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
     const user: UserClass | undefined = await this._usersStore.getUserByID(userID);
     return user?.toModel();
+  }
+
+  @Get('{userID}/towns')
+  public async getUserTowns(@Path() userID: string): Promise<Town[]> {
+    const userPromise: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
+    return userPromise.then(
+      user =>
+        user?.townIDs.flatMap(townID => this._townsStore.getTownByID(townID)?.toModel() ?? []) ??
+        [],
+    );
   }
 }

@@ -1,6 +1,6 @@
 import User from './User';
-import supabase from '../supabase/client';
 import { User as UserModel } from '../api/Model';
+import UsersDom, { DBUser } from './UsersDom';
 /**
  * A Store for caching user entries from the database.
  *
@@ -16,21 +16,6 @@ export default class UsersStore {
    */
   static initializeUsersStore() {
     UsersStore._instance = new UsersStore();
-    UsersStore._instance.refreshStore();
-  }
-
-  /**
-   * Loads existing users from the db into the store
-   */
-  private async _loadExistingUsers() {
-    const { data, error } = await supabase.from('users').select('*');
-    if (!data) {
-      throw new Error('Could not load existing users');
-    }
-    if (error) {
-      throw new Error(`Could not load existing users. Failed with error: ${error}`);
-    }
-    data?.forEach(user => this._addExistingUser(user.id, user.nickname, user.email));
   }
 
   /**
@@ -47,6 +32,7 @@ export default class UsersStore {
 
   private constructor() {
     this._users = new Map<string, User>();
+    this.refreshStore();
   }
 
   /**
@@ -60,13 +46,18 @@ export default class UsersStore {
       return user;
     }
 
-    return this._getUserFromDB(userID);
+    const dbUser: DBUser | undefined = await UsersDom.getUserFromDB(userID);
+    if (dbUser) {
+      return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
+    }
+    return undefined;
   }
 
   /**
    * Refreshes the UsersStore to be in sync with the database
    */
   public async refreshStore(): Promise<void> {
+<<<<<<< HEAD
     await this._loadExistingUsers();
   }
 
@@ -81,6 +72,11 @@ export default class UsersStore {
       return this._addExistingUser(dbUser.id, dbUser.nickname, dbUser.email);
     }
     return undefined;
+=======
+    (await UsersDom.loadExistingUsers()).forEach(user =>
+      this._addExistingUser(user.id, user.nickname, user.email),
+    );
+>>>>>>> b101669c688e1babd55d2943ac3879c933f5e634
   }
 
   /**
@@ -100,12 +96,17 @@ export default class UsersStore {
    * @returns List of all publicly visible users
    */
   public async getUsers(): Promise<UserModel[]> {
-    // TODO this is super inefficient
-    await this.refreshStore();
     return Array.from(this._users).map(([userID, user]) => ({
       userID,
       email: user.email,
       nickname: user.nickname,
     }));
+  }
+
+  /**
+   * Adds the given townID to the User
+   */
+  public async addTownToUser(userID: string, townID: string) {
+    this.getUserByID(userID).then(user => user?.addTownID(townID));
   }
 }

@@ -2,10 +2,13 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { Database } from '../types/Supabase';
 
-dotenv.config();
+export default function getClient() {
+  dotenv.config();
 
-const SUPABASE_URL = 'https://mdootllbkurfvmpootdk.supabase.co';
-if (!process.env.SUPABASE_KEY) {
-  throw new Error('DB Key not provided. Cannot connect to db');
+  const supabaseUrl = 'https://mdootllbkurfvmpootdk.supabase.co';
+  const supabaseKey = process.env.SUPABASE_KEY;
+  if (!supabaseKey) {
+    throw new Error('DB Key not provided. Cannot connect to db');
+  }
+  return createClient<Database>(supabaseUrl, supabaseKey);
 }
-export default createClient<Database>(SUPABASE_URL, process.env.SUPABASE_KEY);

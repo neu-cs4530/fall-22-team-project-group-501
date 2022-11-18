@@ -1,7 +1,5 @@
 import { useContext } from 'react';
 import assert from 'assert';
-import LoginControllerContext from '../contexts/LoginControllerContext';
-import { LoginController } from '../contexts/LoginControllerContext';
 import { SettingsController } from '../contexts/SettingsModalContext';
 import SettingsModalContext from '../contexts/SettingsModalContext';
 
