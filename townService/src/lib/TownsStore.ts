@@ -1,6 +1,7 @@
 import { ITiledMap } from '@jonbell/tiled-map-type-guard';
 import * as fs from 'fs/promises';
 import { customAlphabet } from 'nanoid';
+import UsersStore from 'src/profile/UsersStore';
 import Town from '../town/Town';
 import { TownEmitterFactory } from '../types/CoveyTownSocket';
 
@@ -128,6 +129,30 @@ export default class TownsStore {
   }
 
   /**
+   * Updates an existing town. Does not validate the town password
+   * @param townID
+   * @param friendlyName
+   * @param makePublic
+   * @returns true upon success, or false otherwise
+   */
+  updateTownForUser(townID: string, friendlyName?: string, makePublic?: boolean): boolean {
+    const existingTown = this.getTownByID(townID);
+    if (!existingTown) {
+      return false;
+    }
+    if (friendlyName !== undefined) {
+      if (friendlyName.length === 0) {
+        return false;
+      }
+      existingTown.friendlyName = friendlyName;
+    }
+    if (makePublic !== undefined) {
+      existingTown.isPubliclyListed = makePublic;
+    }
+    return true;
+  }
+
+  /**
    * Deletes a given town from this towns store, destroying the town controller in the process.
    * Checks that the password is valid before deletion
    * @param townID
@@ -137,6 +162,22 @@ export default class TownsStore {
   deleteTown(townID: string, townUpdatePassword: string): boolean {
     const existingTown = this.getTownByID(townID);
     if (existingTown && passwordMatches(townUpdatePassword, existingTown.townUpdatePassword)) {
+      this._towns = this._towns.filter(town => town !== existingTown);
+      existingTown.disconnectAllPlayers();
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Deletes a given town from this towns store, destroying the town controller in the process.
+   * @param townID
+   * @param townUpdatePassword
+   * @returns true if the town exists and is successfully deleted, false otherwise
+   */
+  deleteTownForUser(townID: string): boolean {
+    const existingTown = this.getTownByID(townID);
+    if (existingTown) {
       this._towns = this._towns.filter(town => town !== existingTown);
       existingTown.disconnectAllPlayers();
       return true;

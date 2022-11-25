@@ -61,4 +61,13 @@ export default class User {
   public toModel(): UserModel {
     return { userID: this.userID, nickname: this.nickname, email: this.email };
   }
+
+  /**
+   * Checks if this user owns the given town
+   * @param townID the townID to check
+   * @returns whether this user owns the town (true = yes)
+   */
+  public ownsTown(townID: string): boolean {
+    return this._townIDs.includes(townID);
+  }
 }

@@ -11,8 +11,10 @@ import {
   Post,
   Response,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
+import { Scopes } from '../api/authenticate';
 
 import { Town, TownCreateParams, TownCreateResponse } from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
@@ -119,6 +121,34 @@ export class TownsController extends Controller {
   }
 
   /**
+   * Updates an existing town's settings by ID
+   *
+   * @param townID  town to update
+   * @param userID  must be the userID that created this town. Must be the owner and will be checked against the authorization header
+   * @param requestBody The updated settings
+   */
+  @Patch('{townID}/user/{userID}')
+  @Security('jwt', [Scopes.User])
+  @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
+  public async updateUserTown(
+    @Path() townID: string,
+    @Path() userID: string,
+    @Body() requestBody: TownSettingsUpdate,
+  ): Promise<void> {
+    if (!(await this._usersStore.userOwnsTown(userID, townID))) {
+      throw new InvalidParametersError('Invalid user provided');
+    }
+    const success = this._townsStore.updateTownForUser(
+      townID,
+      requestBody.friendlyName,
+      requestBody.isPubliclyListed,
+    );
+    if (!success) {
+      throw new InvalidParametersError('Invalid update values specified');
+    }
+  }
+
+  /**
    * Deletes a town
    * @param townID ID of the town to delete
    * @param townUpdatePassword town update password, must match the password returned by createTown
@@ -132,6 +162,25 @@ export class TownsController extends Controller {
     const success = this._townsStore.deleteTown(townID, townUpdatePassword);
     if (!success) {
       throw new InvalidParametersError('Invalid password or update values specified');
+    }
+  }
+
+  /**
+   * Deletes a town
+   * @param townID ID of the town to delete
+   * @param userID ID of the user deleting the town. Will fail if the user is not the creator of the town
+   */
+  @Delete('{townID}/user/{userID}')
+  @Security('jwt', [Scopes.User])
+  @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
+  public async deleteTownForUser(@Path() townID: string, @Path() userID: string): Promise<void> {
+    const properUser: boolean = await this._usersStore.userOwnsTown(userID, townID);
+    if (!properUser) {
+      throw new InvalidParametersError('Invalid user provided');
+    }
+    const success = this._townsStore.deleteTownForUser(townID);
+    if (!success) {
+      throw new InvalidParametersError('Invalid update values specified');
     }
   }
 

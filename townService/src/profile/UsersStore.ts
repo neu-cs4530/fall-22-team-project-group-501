@@ -92,4 +92,14 @@ export default class UsersStore {
   public async addTownToUser(userID: string, townID: string) {
     this.getUserByID(userID).then(user => user?.addTownID(townID));
   }
+
+  /**
+   * Checks if the given user owns the given town
+   * @param userID the userID to check
+   * @param townID the townID of the user
+   * @return Promise containing whether the user owns the town
+   */
+  public async userOwnsTown(userID: string, townID: string): Promise<boolean> {
+    return this.getUserByID(userID).then(user => user?.ownsTown(townID) ?? false);
+  }
 }
