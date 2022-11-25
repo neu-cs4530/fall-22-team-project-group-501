@@ -17,6 +17,7 @@ import {
 import { Town, TownCreateParams, TownCreateResponse } from '../api/Model';
 import InvalidParametersError from '../lib/InvalidParametersError';
 import CoveyTownsStore from '../lib/TownsStore';
+import CoveyUsersStore from '../profile/UsersStore';
 import {
   ConversationArea,
   CoveyTownSocket,
@@ -33,6 +34,8 @@ import {
 // eslint-disable-next-line import/prefer-default-export
 export class TownsController extends Controller {
   private _townsStore: CoveyTownsStore = CoveyTownsStore.getInstance();
+
+  private _usersStore: CoveyUsersStore = CoveyUsersStore.getInstance();
 
   /**
    * List all towns that are set to be publicly available
@@ -59,6 +62,31 @@ export class TownsController extends Controller {
       request.isPubliclyListed,
       request.mapFile,
     );
+    return {
+      townID,
+      townUpdatePassword,
+    };
+  }
+
+  /**
+   * Create a new town
+   *
+   * @param request The public-facing information for the new town
+   * @example request {"friendlyName": "My testing town public name", "isPubliclyListed": true}
+   * @returns The ID of the newly created town, and a secret password that will be needed to update or delete this town.
+   */
+  @Example<TownCreateResponse>({ townID: 'stringID', townUpdatePassword: 'secretPassword' })
+  @Post('user/{userID}')
+  public async createTownForUser(
+    @Path() userID: string,
+    @Body() request: TownCreateParams,
+  ): Promise<TownCreateResponse> {
+    const { townID, townUpdatePassword } = await this._townsStore.createTown(
+      request.friendlyName,
+      request.isPubliclyListed,
+      request.mapFile,
+    );
+    this._usersStore.addTownToUser(userID, townID);
     return {
       townID,
       townUpdatePassword,

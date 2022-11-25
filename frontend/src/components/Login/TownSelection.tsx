@@ -51,30 +51,41 @@ export default function TownSelection(): JSX.Element {
   const [userName, setUserName] = useState<string>('');
 
   // Authentication states
-  const { setAuthClient, supabaseService } = loginController;
-  const { usersService } = loginController;
+  const { supabaseService, usersService } = loginController;
   const [signedIn, setSignedIn] = useState(false);
   const [signedInAsGuest, setSignedInAsGuest] = useState(false);
   const [sessionData, setSessionData] = useState<Session | null>(null);
 
   // Admin settings states
   // TODO: fetch adminTownIDList from db
-  const adminTownIDList = ['6287E581', '3973DBE9'];
-  const { isModalOpen, openModal, closeModal } = settings;
+  const { openModal } = settings;
   const { setEditingTown, getEditingTown } = settings;
   const [foundEditingTown, setFoundEditingTown] = useState<boolean>(false);
   // Todo: set states for admin town list?
-  const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>();
+  const [currentUserTowns, setCurrentUserTowns] = useState<Town[]>([]);
 
-  // Filters the list of towns to only include towns where the townID is in the adminTownIDList
-  /*  const filterAdminTowns = useCallback(() => {
-    if (currentPublicTowns) {
-      const filteredTowns = currentPublicTowns.filter(town =>
-        adminTownIDList.includes(town.townID),
-      );
-      setCurrentUserTowns(filteredTowns);
+  /* --------------------- Database Functions -------------------- */
+  // get user towns with usersService.getUserTowns, set currentUserTowns and log it
+  const getUserTowns = useCallback(async () => {
+    if (localUser) {
+      const userTowns = await usersService.getUserTowns(localUser.userID);
+      setCurrentUserTowns(userTowns);
     }
-  }, [currentPublicTowns, adminTownIDList]); */
+  }, [localUser, usersService]);
+
+  // Gets current user from UsersService endpoint with userID and sets local state
+  const getUser = useCallback(async () => {
+    if (user) {
+      const currentUser = await usersService.getUserInfo(user.id);
+      setLocalUser(currentUser);
+    }
+  }, [user, usersService]);
+
+  const logUser = useCallback(() => {
+    console.log(user);
+    console.log(currentUserTowns);
+    console.log(currentPublicTowns);
+  }, [user, currentUserTowns, currentPublicTowns]);
 
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
@@ -142,7 +153,7 @@ export default function TownSelection(): JSX.Element {
     if (!userName || userName.length === 0) {
       toast({
         title: 'Unable to create town',
-        description: 'Please select a username before creating a town',
+        description: 'Please login first',
         status: 'error',
       });
       return;
@@ -155,11 +166,13 @@ export default function TownSelection(): JSX.Element {
       });
       return;
     }
+    // let userTownID = userName;
     try {
-      const newTownInfo = await townsService.createTown({
+      const newTownInfo = await townsService.createTownForUser(userName, {
         friendlyName: newTownName,
         isPubliclyListed: newTownIsPublic,
       });
+      await getUserTowns();
       let privateMessage = <></>;
       if (!newTownIsPublic) {
         privateMessage = (
@@ -184,11 +197,11 @@ export default function TownSelection(): JSX.Element {
         isClosable: true,
         duration: null,
       });
-      await handleJoin(newTownInfo.townID);
+      //await handleJoin(newTownInfo.townID);
     } catch (err) {
       if (err instanceof Error) {
         toast({
-          title: 'Unable to connect to Towns Service',
+          title: 'Not able to connect to Towns Service',
           description: err.toString(),
           status: 'error',
         });
@@ -204,38 +217,35 @@ export default function TownSelection(): JSX.Element {
 
   /* --------------------- Authentication Functions -------------------- */
   // Get session data from Supabase
-  const getSessionData = async () => {
+  const getSessionData = useCallback(async () => {
     const session = await supabaseService.auth.getSession();
     setSessionData(session.data.session);
-  };
+  }, [supabaseService.auth]);
 
   // Handles the sign in process
   useEffect(() => {
     const session = supabaseService.auth.getSession();
     setSignedIn(!!session);
     getSessionData();
-  }, [supabaseService]);
+  }, [supabaseService, getSessionData]);
 
   // Update user state when user logs in
   useEffect(() => {
     if (sessionData) {
       setUser(sessionData.user);
-      if (user) {
-        setUserName(user.id);
+      if (sessionData.user) {
+        setUserName(sessionData.user.id);
       }
       OpenAPI.TOKEN = sessionData.access_token;
     }
   }, [sessionData]);
 
-  /* --------------------- Database Functions -------------------- */
-  // Gets current user from UsersService endpoint with userID and sets local state
-  const getUser = async () => {
-    if (user) {
-      const currentUser = await usersService.getUserInfo(user.id);
-      setLocalUser(currentUser);
-      console.log(currentUser);
-    }
-  };
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
+  useEffect(() => {
+    getUserTowns();
+  }, [getUserTowns]);
 
   /* ------------------------ Admin Settings Functions ------------------------ */
   // Sets foundEditingTown to false if no editing town is found
@@ -292,6 +302,7 @@ export default function TownSelection(): JSX.Element {
               view='sign_in'
               magicLink={true}
               onlyThirdPartyProviders={true}
+              redirectTo={window.location.origin}
             />
           </Box>
           <Heading p='4' as='h2' size='lg'>
@@ -356,7 +367,7 @@ export default function TownSelection(): JSX.Element {
               Sign Out
             </Button>
             {/* Log Users */}
-            <Button mt='4' data-testid='logUsersButton' onClick={getUser}>
+            <Button mt='4' data-testid='logUsersButton' onClick={logUser}>
               Log Users
             </Button>
           </Box>
@@ -412,36 +423,34 @@ export default function TownSelection(): JSX.Element {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {currentPublicTowns
-                    ?.filter(town => adminTownIDList.includes(town.townID))
-                    .map(town => (
-                      <Tr key={town.townID}>
-                        <Td role='cell'>{town.friendlyName}</Td>
-                        <Td role='cell'>{town.townID}</Td>
-                        <Td role='cell'></Td>
-                        <Button
-                          onClick={() => handleJoin(town.townID)}
-                          disabled={town.currentOccupancy >= town.maximumOccupancy}>
-                          Connect
-                        </Button>
-                        {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
-                        <CustomButton
-                          data-testid='editTownButton'
-                          startIcon={<SettingsIcon />}
-                          onClick={() => {
-                            handleEdit(town.townID);
-                            // use context to call openModal from provider
-                            openModal();
-                          }}></CustomButton>
-                        {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
-                        {foundEditingTown ? (
-                          // #TODO: figure out best way to destroy modal when done editing town so values don't persist
-                          <TownSettingsPrejoin key={town.townID} />
-                        ) : (
-                          <></>
-                        )}
-                      </Tr>
-                    ))}
+                  {currentUserTowns.map(town => (
+                    <Tr key={town.townID}>
+                      <Td role='cell'>{town.friendlyName}</Td>
+                      <Td role='cell'>{town.townID}</Td>
+                      <Td role='cell'></Td>
+                      <Button
+                        onClick={() => handleJoin(town.townID)}
+                        disabled={town.currentOccupancy >= town.maximumOccupancy}>
+                        Connect
+                      </Button>
+                      {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
+                      <CustomButton
+                        data-testid='editTownButton'
+                        startIcon={<SettingsIcon />}
+                        onClick={() => {
+                          handleEdit(town.townID);
+                          // use context to call openModal from provider
+                          openModal();
+                        }}></CustomButton>
+                      {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
+                      {foundEditingTown ? (
+                        // #TODO: figure out best way to destroy modal when done editing town so values don't persist
+                        <TownSettingsPrejoin key={town.townID} />
+                      ) : (
+                        <></>
+                      )}
+                    </Tr>
+                  ))}
                 </Tbody>
               </Table>
             </Box>

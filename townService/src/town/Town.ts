@@ -5,6 +5,7 @@ import IVideoClient from '../lib/IVideoClient';
 import Player from '../lib/Player';
 import TwilioVideo from '../lib/TwilioVideo';
 import { isViewingArea } from '../TestUtils';
+import { Town as TownModel } from '../api/Model';
 import {
   ChatMessage,
   ConversationArea as ConversationAreaModel,
@@ -354,6 +355,18 @@ export default class Town {
 
     this._interactables = this._interactables.concat(viewingAreas).concat(conversationAreas);
     this._validateInteractables();
+  }
+
+  /**
+   * Converts thsi town to a Model
+   */
+  public toModel(): TownModel {
+    return {
+      friendlyName: this.friendlyName,
+      townID: this.townID,
+      currentOccupancy: this.occupancy,
+      maximumOccupancy: this.capacity,
+    };
   }
 
   private _validateInteractables() {
