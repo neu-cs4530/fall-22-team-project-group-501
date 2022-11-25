@@ -29,20 +29,22 @@ export function expressAuthentication(
       }
       const bearer = bearerHeader.split(' ');
       const token: string = bearer[1];
-      supabase.auth.getUser(token).then(userResponse => {
-        if (userResponse.error) {
-          reject(new AuthError(userResponse.error.message + token, 401));
-          return;
-        }
+      supabase()
+        .auth.getUser(token)
+        .then(userResponse => {
+          if (userResponse.error) {
+            reject(new AuthError(userResponse.error.message + token, 401));
+            return;
+          }
 
-        const { user } = userResponse.data;
-        const reqUser = req.params.userID || req.body.userID;
-        if ((scopes && scopes.includes(Scopes.User) && !user) || user?.id !== reqUser) {
-          reject(new AuthError('Forbidden: User Token did not match user in request'));
-          return;
-        }
-        resolve(user);
-      });
+          const { user } = userResponse.data;
+          const reqUser = req.params.userID || req.body.userID;
+          if ((scopes && scopes.includes(Scopes.User) && !user) || user?.id !== reqUser) {
+            reject(new AuthError('Forbidden: User Token did not match user in request'));
+            return;
+          }
+          resolve(user);
+        });
     });
   }
 

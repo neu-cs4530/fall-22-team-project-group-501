@@ -1,5 +1,5 @@
 import { Controller, Get, Path, Route, Security, Tags } from 'tsoa';
-import { Scopes } from '../api/authenticate'
+import { Scopes } from '../api/authenticate';
 import { User, Town } from '../api/Model';
 import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
