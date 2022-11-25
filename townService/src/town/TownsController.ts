@@ -130,7 +130,7 @@ export class TownsController extends Controller {
   @Patch('{townID}/user/{userID}')
   @Security('jwt', [Scopes.User])
   @Response<InvalidParametersError>(400, 'Invalid password or update values specified')
-  public async updateUserTown(
+  public async updateTownForUser(
     @Path() townID: string,
     @Path() userID: string,
     @Body() requestBody: TownSettingsUpdate,

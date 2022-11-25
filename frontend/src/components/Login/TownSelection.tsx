@@ -18,11 +18,11 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import CustomButton from '@material-ui/core/Button';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react'; // eslint-disable-line no-unused-vars
-import { Session, User as SupabaseUser } from '@supabase/gotrue-js'; // eslint-disable-line no-unused-vars
+import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
+import { Session, User as SupabaseUser } from '@supabase/gotrue-js';
 import assert from 'assert';
-import React, { useCallback, useEffect, useState } from 'react'; // eslint-disable-line no-unused-vars
-import { User as LocalUser } from '../../../../townService/src/api/Model'; // eslint-disable-line no-unused-vars
+import React, { useCallback, useEffect, useState } from 'react';
+import { User as LocalUser } from '../../../../townService/src/api/Model';
 import TownController from '../../classes/TownController';
 import { OpenAPI, Town } from '../../generated/client';
 import useLoginController from '../../hooks/useLoginController';

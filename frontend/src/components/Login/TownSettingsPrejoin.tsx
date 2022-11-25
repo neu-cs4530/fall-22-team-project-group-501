@@ -44,7 +44,6 @@ function TownSettingsPrejoin(props: any): JSX.Element {
   const [isPubliclyListed, setIsPubliclyListed] = useState<boolean>(
     coveyTownController.townIsPubliclyListed,
   );
-  const [roomUpdatePassword, setRoomUpdatePassword] = useState<string>('');
 
   const closeSettings = useCallback(() => {
     /* async function updateRoom() {
@@ -70,7 +69,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
   const processUpdates = async (action: string) => {
     if (action === 'delete') {
       try {
-        await coveyTownController.deleteTown(roomUpdatePassword);
+        await coveyTownController.deleteTownForUser();
         toast({
           title: 'Town deleted',
           status: 'success',
@@ -93,7 +92,7 @@ function TownSettingsPrejoin(props: any): JSX.Element {
       }
     } else {
       try {
-        await coveyTownController.updateTown(roomUpdatePassword, {
+        await coveyTownController.updateTownForUser({
           isPubliclyListed,
           friendlyName,
         });
@@ -158,18 +157,6 @@ function TownSettingsPrejoin(props: any): JSX.Element {
                   name='isPubliclyListed'
                   isChecked={isPubliclyListed}
                   onChange={e => setIsPubliclyListed(e.target.checked)}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel htmlFor='updatePassword'>Town Update Password</FormLabel>
-                <Input
-                  data-testid='updatePassword'
-                  id='updatePassword'
-                  placeholder='Password'
-                  name='password'
-                  type='password'
-                  value={roomUpdatePassword}
-                  onChange={e => setRoomUpdatePassword(e.target.value)}
                 />
               </FormControl>
             </ModalBody>

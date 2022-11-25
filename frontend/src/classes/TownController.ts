@@ -473,6 +473,17 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
+   * Update the settings of the current town. Sends the request to update the settings to the townService,
+   * and does not update the local model. If the update is successful, then the townService will inform us
+   * of the updated settings. Throws an error if the request is not successful.
+   *
+   * @param updatedSettings
+   */
+  async updateTownForUser(updatedSettings: { isPubliclyListed: boolean; friendlyName: string }) {
+    await this._townsService.updateTownForUser(this._townID, this.userID, updatedSettings);
+  }
+
+  /**
    * Delete the current town. Sends the request to the townService, and sends an error if the request is
    * not successful
    *
@@ -480,6 +491,15 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    */
   async deleteTown(roomUpdatePassword: string) {
     await this._townsService.deleteTown(this._townID, roomUpdatePassword);
+  }
+
+  /**
+   * Delete the current town for the current user. Sends the request to the townService, and sends an error if the request is
+   * not successful
+   *
+   */
+  async deleteTownForUser() {
+    await this._townsService.deleteTownForUser(this._townID, this.userID);
   }
 
   /**

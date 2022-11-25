@@ -3,6 +3,7 @@ import { Request } from 'express';
 import supabase from '../supabase/client';
 
 export enum Scopes {
+  // Needs to be disabled due to a bug in eslint believing that this is somehow shadowing
   // eslint-disable-next-line @typescript-eslint/no-shadow
   User = 'User',
 }

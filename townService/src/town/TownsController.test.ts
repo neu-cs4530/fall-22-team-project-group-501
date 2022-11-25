@@ -233,7 +233,7 @@ describe('TownsController integration tests', () => {
       const pubTown1 = await createTownForUserTesting(userID, undefined, true);
       expectTownListMatches(await controller.listTowns(), pubTown1);
       await expect(
-        controller.updateUserTown(pubTown1.townID, userID, {
+        controller.updateTownForUser(pubTown1.townID, userID, {
           friendlyName: 'broken',
           isPubliclyListed: false,
         }),
@@ -243,7 +243,7 @@ describe('TownsController integration tests', () => {
     it('Updates the friendlyName and visbility as requested', async () => {
       const pubTown1 = await createTownForUserTesting(userID, undefined, false);
       expectTownListMatches(await controller.listTowns(), pubTown1);
-      await controller.updateUserTown(pubTown1.townID, userID, {
+      await controller.updateTownForUser(pubTown1.townID, userID, {
         friendlyName: 'newName',
         isPubliclyListed: true,
       });
@@ -253,7 +253,7 @@ describe('TownsController integration tests', () => {
     });
     it('Should fail if the townID does not exist', async () => {
       await expect(
-        controller.updateUserTown(nanoid(), userID, {
+        controller.updateTownForUser(nanoid(), userID, {
           friendlyName: 'test',
           isPubliclyListed: true,
         }),
@@ -264,7 +264,7 @@ describe('TownsController integration tests', () => {
       const pubTown1 = await createTownForUserTesting(userID, undefined, false);
       expectTownListMatches(await controller.listTowns(), pubTown1);
       await expect(
-        controller.updateUserTown(pubTown1.townID, userID2, {
+        controller.updateTownForUser(pubTown1.townID, userID2, {
           friendlyName: 'newName',
           isPubliclyListed: true,
         }),
