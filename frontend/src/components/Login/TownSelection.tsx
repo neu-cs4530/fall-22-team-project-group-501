@@ -18,13 +18,13 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import CustomButton from '@material-ui/core/Button';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react'; // eslint-disable-line no-unused-vars
-import { Session, User as SupabaseUser } from '@supabase/gotrue-js'; // eslint-disable-line no-unused-vars
+import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
+import { Session, User as SupabaseUser } from '@supabase/gotrue-js';
 import assert from 'assert';
-import React, { useCallback, useEffect, useState } from 'react'; // eslint-disable-line no-unused-vars
-import { User as LocalUser } from '../../../../townService/src/api/Model'; // eslint-disable-line no-unused-vars
+import React, { useCallback, useEffect, useState } from 'react';
+import { User as LocalUser } from '../../../../townService/src/api/Model';
 import TownController from '../../classes/TownController';
-import { OpenAPI, Town } from '../../generated/client';
+import { Town } from '../../generated/client';
 import useLoginController from '../../hooks/useLoginController';
 import useSettings from '../../hooks/useSettings';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
@@ -39,7 +39,7 @@ export default function TownSelection(): JSX.Element {
   const settings = useSettings();
 
   // Town states
-  const { setTownController, townsService } = loginController;
+  const { setTownController, supabaseService } = loginController;
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
@@ -51,7 +51,7 @@ export default function TownSelection(): JSX.Element {
   const [userName, setUserName] = useState<string>('');
 
   // Authentication states
-  const { supabaseService, usersService } = loginController;
+  const { usersService, townsService, setToken } = loginController;
   const [signedIn, setSignedIn] = useState(false);
   const [signedInAsGuest, setSignedInAsGuest] = useState(false);
   const [sessionData, setSessionData] = useState<Session | null>(null);
@@ -75,7 +75,7 @@ export default function TownSelection(): JSX.Element {
 
   // Gets current user from UsersService endpoint with userID and sets local state
   const getUser = useCallback(async () => {
-    if (user) {
+    if (user && usersService.httpRequest.config.TOKEN) {
       const currentUser = await usersService.getUserInfo(user.id);
       setLocalUser(currentUser);
     }
@@ -236,9 +236,9 @@ export default function TownSelection(): JSX.Element {
       if (sessionData.user) {
         setUserName(sessionData.user.id);
       }
-      OpenAPI.TOKEN = sessionData.access_token;
+      setToken(sessionData.access_token);
     }
-  }, [sessionData]);
+  }, [sessionData, setToken]);
 
   useEffect(() => {
     getUser();
@@ -428,20 +428,24 @@ export default function TownSelection(): JSX.Element {
                       <Td role='cell'>{town.friendlyName}</Td>
                       <Td role='cell'>{town.townID}</Td>
                       <Td role='cell'></Td>
-                      <Button
-                        onClick={() => handleJoin(town.townID)}
-                        disabled={town.currentOccupancy >= town.maximumOccupancy}>
-                        Connect
-                      </Button>
+                      <td>
+                        <Button
+                          onClick={() => handleJoin(town.townID)}
+                          disabled={town.currentOccupancy >= town.maximumOccupancy}>
+                          Connect
+                        </Button>
+                      </td>
                       {/* Use ModalProvider to sync useDisclosure state between button and TownSettingsPrejoin */}
-                      <CustomButton
-                        data-testid='editTownButton'
-                        startIcon={<SettingsIcon />}
-                        onClick={() => {
-                          handleEdit(town.townID);
-                          // use context to call openModal from provider
-                          openModal();
-                        }}></CustomButton>
+                      <td>
+                        <CustomButton
+                          data-testid='editTownButton'
+                          startIcon={<SettingsIcon />}
+                          onClick={() => {
+                            handleEdit(town.townID);
+                            // use context to call openModal from provider
+                            openModal();
+                          }}></CustomButton>
+                      </td>
                       {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
                       {foundEditingTown ? (
                         // #TODO: figure out best way to destroy modal when done editing town so values don't persist
