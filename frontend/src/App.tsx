@@ -60,7 +60,6 @@ function App() {
   const [usersService, setUsersService] = useState(new TownsServiceClient({ BASE: url }).users);
   const authService = supabase;
   const setToken = useCallback((token: string | undefined) => {
-    console.log('AHHH');
     setTownsService(service => {
       service.httpRequest.config.TOKEN = token;
       return service;

@@ -49,7 +49,6 @@ export default function TownSelection(): JSX.Element {
   const [user, setUser] = useState<SupabaseUser | undefined>(undefined);
   const [localUser, setLocalUser] = useState<LocalUser | null>(null);
   const [userName, setUserName] = useState<string>('');
-
   // Authentication states
   const { usersService, townsService, setToken } = loginController;
   const [signedIn, setSignedIn] = useState(false);
@@ -449,7 +448,7 @@ export default function TownSelection(): JSX.Element {
                       {/* If foundEditingTown is true render TownSettingsPrejoin with editingTownController */}
                       {foundEditingTown ? (
                         // #TODO: figure out best way to destroy modal when done editing town so values don't persist
-                        <TownSettingsPrejoin key={town.townID} />
+                        <TownSettingsPrejoin localUser={localUser} />
                       ) : (
                         <></>
                       )}

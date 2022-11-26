@@ -18,21 +18,20 @@ import assert from 'assert';
 import React, { useCallback, useState } from 'react';
 import TownController from '../../classes/TownController';
 import useSettings from '../../hooks/useSettings';
+import { User as LocalUser } from '../../../../townService/src/api/Model';
 
 /*
  * Modified version TownSettings.tsx to be used in the prejoin screen
  * this allows admin to set the town settings without having to join the town
  * uses SettingsModalContext to keep track of the modal state and current town being modified.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-function TownSettingsPrejoin(props: any): JSX.Element {
-  /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-
+function TownSettingsPrejoin(props: { localUser: LocalUser | null }): JSX.Element {
   // Use the ModalContext to get the modal state and functions
   const toast = useToast();
   const settings = useSettings();
   const { isModalOpen, closeModal } = settings;
   const { getEditingTown } = settings;
+  const { localUser } = props;
 
   const editingTown = getEditingTown();
 
@@ -69,7 +68,8 @@ function TownSettingsPrejoin(props: any): JSX.Element {
   const processUpdates = async (action: string) => {
     if (action === 'delete') {
       try {
-        await coveyTownController.deleteTownForUser();
+        assert(localUser);
+        await coveyTownController.deleteTownForUser(localUser.userID);
         toast({
           title: 'Town deleted',
           status: 'success',
@@ -92,7 +92,9 @@ function TownSettingsPrejoin(props: any): JSX.Element {
       }
     } else {
       try {
-        await coveyTownController.updateTownForUser({
+        assert(localUser?.userID);
+        console.log(localUser);
+        await coveyTownController.updateTownForUser(localUser.userID, {
           isPubliclyListed,
           friendlyName,
         });

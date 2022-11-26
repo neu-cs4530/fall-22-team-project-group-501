@@ -7,7 +7,7 @@ import TypedEmitter from 'typed-emitter';
 import Interactable from '../components/Town/Interactable';
 import ViewingArea from '../components/Town/interactables/ViewingArea';
 import { LoginController } from '../contexts/LoginControllerContext';
-import { TownsService, TownsServiceClient } from '../generated/client';
+import { TownsService } from '../generated/client';
 import useTownController from '../hooks/useTownController';
 import {
   ChatMessage,
@@ -206,7 +206,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
     assert(url);
     this._socket = io(url, { auth: { userName, townID } });
-    this._townsService = new TownsServiceClient({ BASE: url }).towns;
+    this._townsService = loginController.townsService;
     this.registerSocketListeners();
   }
 
@@ -479,8 +479,11 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    *
    * @param updatedSettings
    */
-  async updateTownForUser(updatedSettings: { isPubliclyListed: boolean; friendlyName: string }) {
-    await this._townsService.updateTownForUser(this._townID, this.userID, updatedSettings);
+  async updateTownForUser(
+    userID: string,
+    updatedSettings: { isPubliclyListed: boolean; friendlyName: string },
+  ) {
+    await this._townsService.updateTownForUser(this._townID, userID, updatedSettings);
   }
 
   /**
@@ -498,8 +501,8 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * not successful
    *
    */
-  async deleteTownForUser() {
-    await this._townsService.deleteTownForUser(this._townID, this.userID);
+  async deleteTownForUser(userID: string) {
+    await this._townsService.deleteTownForUser(this._townID, userID);
   }
 
   /**
