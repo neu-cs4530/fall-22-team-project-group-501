@@ -7,7 +7,7 @@ import TypedEmitter from 'typed-emitter';
 import Interactable from '../components/Town/Interactable';
 import ViewingArea from '../components/Town/interactables/ViewingArea';
 import { LoginController } from '../contexts/LoginControllerContext';
-import { TownsService, TownsServiceClient } from '../generated/client';
+import { TownsService } from '../generated/client';
 import useTownController from '../hooks/useTownController';
 import {
   ChatMessage,
@@ -206,7 +206,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
     assert(url);
     this._socket = io(url, { auth: { userName, townID } });
-    this._townsService = new TownsServiceClient({ BASE: url }).towns;
+    this._townsService = loginController.townsService;
     this.registerSocketListeners();
   }
 
@@ -473,6 +473,20 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
+   * Update the settings of the current town. Sends the request to update the settings to the townService,
+   * and does not update the local model. If the update is successful, then the townService will inform us
+   * of the updated settings. Throws an error if the request is not successful.
+   *
+   * @param updatedSettings
+   */
+  async updateTownForUser(
+    userID: string,
+    updatedSettings: { isPubliclyListed: boolean; friendlyName: string },
+  ) {
+    await this._townsService.updateTownForUser(this._townID, userID, updatedSettings);
+  }
+
+  /**
    * Delete the current town. Sends the request to the townService, and sends an error if the request is
    * not successful
    *
@@ -480,6 +494,15 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    */
   async deleteTown(roomUpdatePassword: string) {
     await this._townsService.deleteTown(this._townID, roomUpdatePassword);
+  }
+
+  /**
+   * Delete the current town for the current user. Sends the request to the townService, and sends an error if the request is
+   * not successful
+   *
+   */
+  async deleteTownForUser(userID: string) {
+    await this._townsService.deleteTownForUser(this._townID, userID);
   }
 
   /**

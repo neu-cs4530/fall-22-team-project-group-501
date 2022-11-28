@@ -12,6 +12,7 @@ import TownsStore from './lib/TownsStore';
 import { ClientToServerEvents, ServerToClientEvents } from './types/CoveyTownSocket';
 import { TownsController } from './town/TownsController';
 import { logError } from './Utils';
+import { AuthError } from './api/authenticate';
 
 dotenv.config();
 
@@ -67,6 +68,11 @@ app.use(
       return res.status(422).json({
         message: 'Validation Failed',
         details: err?.fields,
+      });
+    }
+    if (err instanceof AuthError) {
+      return res.status(err.status).json({
+        message: err.message,
       });
     }
     if (err instanceof Error) {

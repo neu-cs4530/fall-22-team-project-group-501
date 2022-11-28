@@ -56,19 +56,29 @@ function App() {
   assert(url);
 
   // Set up the townsService and usersService clients
-  const townsService = new TownsServiceClient({ BASE: url }).towns;
-  const usersService = new TownsServiceClient({ BASE: url }).users;
+  const [townsService, setTownsService] = useState(new TownsServiceClient({ BASE: url }).towns);
+  const [usersService, setUsersService] = useState(new TownsServiceClient({ BASE: url }).users);
   const authService = supabase;
-
+  const setToken = useCallback((token: string | undefined) => {
+    setTownsService(service => {
+      service.httpRequest.config.TOKEN = token;
+      return service;
+    });
+    setUsersService(service => {
+      service.httpRequest.config.TOKEN = token;
+      return service;
+    });
+  }, []);
   return (
     <SettingsModalContext.Provider value={settingsContext}>
       <LoginControllerContext.Provider
         value={{
           setTownController,
           setAuthClient,
+          supabaseService: authService,
+          setToken,
           townsService,
           usersService,
-          supabaseService: authService,
         }}>
         <UnsupportedBrowserWarning>
           <VideoProvider options={connectionOptions} onError={setError} onDisconnect={onDisconnect}>

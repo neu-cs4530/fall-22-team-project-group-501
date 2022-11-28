@@ -3,13 +3,23 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/**/*Controller.ts"],
   "spec": {
+    "securityDefinitions": {
+      "jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "jwt"
+      }
+    },
     "outputDirectory": "../shared/generated/",
     "specVersion": 3,
     "basePath": "/",
     "tags": [{ "name": "town" }]
   },
   "routes": {
+    "authenticationModule": "./src/api/authenticate.ts",
     "routesDir": "generated",
-    "basePath": "/"
+    "basePath": "/",
+    "esm":true
+
   }
 }

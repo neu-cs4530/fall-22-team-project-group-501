@@ -133,4 +133,35 @@ describe('UsersStore', () => {
       expect(townIDs2).toEqual(expect.arrayContaining([townID2]));
     });
   });
+
+  describe(usersStore.userOwnsTown, () => {
+    const townID1 = nanoid();
+    const userID1 = nanoid();
+    const userID2 = nanoid();
+
+    const userNickname1 = 'nickname1';
+    const userEmail1 = 'email1';
+    const userNickname2 = 'nickname2';
+    const userEmail2 = 'email2';
+    let user1: User;
+    let user2: User;
+
+    beforeEach(() => {
+      user1 = usersStore._addExistingUser(userID1, userNickname1, userEmail1);
+      user2 = usersStore._addExistingUser(userID2, userNickname2, userEmail2);
+    });
+    it('Returns false if the user does not exist', () => {
+      expect(usersStore.userOwnsTown('Notrealuser', 'NotrealTown')).resolves.toEqual(false);
+    });
+
+    it('Returns false if the user does not own the given town', () => {
+      usersStore.addTownToUser(user2.userID, townID1);
+      expect(usersStore.userOwnsTown(user1.userID, townID1)).resolves.toEqual(false);
+    });
+
+    it('Returns true if the user does own the given town', async () => {
+      usersStore.addTownToUser(user1.userID, townID1);
+      expect(usersStore.userOwnsTown(user1.userID, townID1)).resolves.toEqual(true);
+    });
+  });
 });

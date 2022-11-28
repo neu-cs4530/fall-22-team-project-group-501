@@ -1,5 +1,5 @@
-import { Controller, Get, Path, Route, Tags } from 'tsoa';
-
+import { Controller, Get, Path, Route, Security, Tags } from 'tsoa';
+import { Scopes } from '../api/authenticate';
 import { User, Town } from '../api/Model';
 import UserClass from './User';
 import CoveyUsersStore from './UsersStore';
@@ -32,10 +32,11 @@ export class UsersController extends Controller {
    *
    * @param userID  user to retrieve
    */
+  @Security('jwt', [Scopes.User])
   @Get('{userID}')
   public async getUserInfo(@Path() userID: string): Promise<User | undefined> {
-    const success: Promise<UserClass | undefined> = this._usersStore.getUserByID(userID);
-    return success.then(user => user?.toModel());
+    const user: UserClass | undefined = await this._usersStore.getUserByID(userID);
+    return user?.toModel();
   }
 
   @Get('{userID}/towns')

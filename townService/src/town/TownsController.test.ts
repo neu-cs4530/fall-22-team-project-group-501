@@ -14,6 +14,7 @@ import {
   MockedPlayer,
 } from '../TestUtils';
 import { TownsController } from './TownsController';
+import UsersStore from '../profile/UsersStore';
 
 jest.mock('../profile/UsersDom');
 
@@ -59,6 +60,15 @@ describe('TownsController integration tests', () => {
       townID: ret.townID,
       townUpdatePassword: ret.townUpdatePassword,
     };
+  }
+  async function createTownForUserTesting(
+    userID: string,
+    friendlyNameToUse?: string,
+    isPublic = false,
+  ): Promise<TestTownData> {
+    const ret = createTownForTesting(friendlyNameToUse, isPublic);
+    UsersStore.getInstance().addTownToUser(userID, (await ret).townID);
+    return ret;
   }
   function getBroadcastEmitterForTownID(townID: string) {
     const ret = createdTownEmitters.get(townID);
@@ -164,6 +174,104 @@ describe('TownsController integration tests', () => {
       players.forEach(eachPlayer => expect(eachPlayer.socket.disconnect).toBeCalledWith(true));
     });
   });
+
+  describe('deleteTownForUser', () => {
+    const userID = nanoid();
+
+    beforeAll(() => {
+      UsersStore.getInstance()._addExistingUser(userID, 'nickname', 'email');
+    });
+    it('Throws an error if the townID is invalid', async () => {
+      await createTownForUserTesting(userID, undefined, true);
+      await expect(controller.deleteTownForUser(nanoid(), userID)).rejects.toThrowError();
+    });
+
+    it('Throws an error if the userID is invalid', async () => {
+      const { townID } = await createTownForUserTesting(userID, undefined, true);
+      await expect(controller.deleteTownForUser(townID, nanoid())).rejects.toThrowError();
+    });
+    it('Deletes a town if given a valid user and town, no longer allowing it to be joined or listed', async () => {
+      const { townID } = await createTownForUserTesting(userID, undefined, true);
+      await controller.deleteTownForUser(townID, userID);
+
+      const { socket } = mockPlayer(townID);
+      await controller.joinTown(socket);
+      expect(socket.emit).not.toHaveBeenCalled();
+      expect(socket.disconnect).toHaveBeenCalled();
+
+      const listedTowns = await controller.listTowns();
+      if (listedTowns.find(r => r.townID === townID)) {
+        fail('Expected the deleted town to no longer be listed');
+      }
+    });
+    it('Informs all players when a town is destroyed using the broadcast emitter and then disconnects them', async () => {
+      const town = await createTownForUserTesting(userID);
+      const players = await Promise.all(
+        [...Array(10)].map(async () => {
+          const player = mockPlayer(town.townID);
+          await controller.joinTown(player.socket);
+          return player;
+        }),
+      );
+      const townEmitter = getBroadcastEmitterForTownID(town.townID);
+      await controller.deleteTownForUser(town.townID, userID);
+      getLastEmittedEvent(townEmitter, 'townClosing');
+      // extractLastCallToEmit will throw an error if no townClosing was emitted
+
+      players.forEach(eachPlayer => expect(eachPlayer.socket.disconnect).toBeCalledWith(true));
+    });
+  });
+  describe('updateUserTown', () => {
+    const userID = nanoid();
+    const userID2 = nanoid();
+
+    beforeAll(() => {
+      UsersStore.getInstance()._addExistingUser(userID, 'nickname', 'email');
+      UsersStore.getInstance()._addExistingUser(userID2, 'nickname2', 'email2');
+    });
+    it('Does not check the password before updating any values', async () => {
+      const pubTown1 = await createTownForUserTesting(userID, undefined, true);
+      expectTownListMatches(await controller.listTowns(), pubTown1);
+      await expect(
+        controller.updateTownForUser(pubTown1.townID, userID, {
+          friendlyName: 'broken',
+          isPubliclyListed: false,
+        }),
+      ).resolves.not.toThrowError();
+      expect(await controller.listTowns()).toHaveLength(0);
+    });
+    it('Updates the friendlyName and visbility as requested', async () => {
+      const pubTown1 = await createTownForUserTesting(userID, undefined, false);
+      expectTownListMatches(await controller.listTowns(), pubTown1);
+      await controller.updateTownForUser(pubTown1.townID, userID, {
+        friendlyName: 'newName',
+        isPubliclyListed: true,
+      });
+      pubTown1.friendlyName = 'newName';
+      pubTown1.isPubliclyListed = true;
+      expectTownListMatches(await controller.listTowns(), pubTown1);
+    });
+    it('Should fail if the townID does not exist', async () => {
+      await expect(
+        controller.updateTownForUser(nanoid(), userID, {
+          friendlyName: 'test',
+          isPubliclyListed: true,
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('Should fail if the given userID does not own the town', async () => {
+      const pubTown1 = await createTownForUserTesting(userID, undefined, false);
+      expectTownListMatches(await controller.listTowns(), pubTown1);
+      await expect(
+        controller.updateTownForUser(pubTown1.townID, userID2, {
+          friendlyName: 'newName',
+          isPubliclyListed: true,
+        }),
+      ).rejects.toThrowError();
+    });
+  });
+
   describe('updateTown', () => {
     it('Checks the password before updating any values', async () => {
       const pubTown1 = await createTownForTesting(undefined, true);
@@ -253,6 +361,7 @@ describe('TownsController integration tests', () => {
       expect(initialData2.interactables.length).toEqual(initialData.interactables.length);
     });
   });
+
   describe('Interactables', () => {
     let testingTown: TestTownData;
     let player: MockedPlayer;

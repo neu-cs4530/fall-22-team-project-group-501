@@ -6,6 +6,7 @@ import { TownsService, UsersService } from '../generated/client';
 export type LoginController = {
   setTownController: (newController: TownController | null) => void;
   setAuthClient: (newAuthClient: SupabaseClient | null) => void;
+  setToken: (token: string | undefined) => void;
 
   townsService: TownsService;
   usersService: UsersService;
