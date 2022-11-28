@@ -367,9 +367,6 @@ export default function TownSelection(): JSX.Element {
               Sign Out
             </Button>
             {/* Log Users */}
-            <Button mt='4' data-testid='logUsersButton' onClick={logUser}>
-              Log Users
-            </Button>
           </Box>
         </Stack>
       )}
