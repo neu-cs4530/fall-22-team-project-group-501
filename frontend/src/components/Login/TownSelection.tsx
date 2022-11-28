@@ -362,6 +362,7 @@ export default function TownSelection(): JSX.Element {
                 supabaseService.auth.signOut();
                 setSignedIn(false);
                 setSignedInAsGuest(false);
+                setUserName('');
               }}>
               Sign Out
             </Button>
