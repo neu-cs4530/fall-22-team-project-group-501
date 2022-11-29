@@ -2,7 +2,7 @@
 
 Covey.Town provides a virtual meeting space where different groups of people can have simultaneous video calls, allowing participants to drift between different conversations, just like in real life.
 Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/).
-You can view a live deployment of the app [here](https://app.netlify.com/sites/coveytown-group501/overview).
+You can view a deployment of the app [here](https://app.netlify.com/sites/coveytown-group501/overview).
 
 ![Covey.Town Architecture](docs/covey-town-architecture.png)
 
@@ -31,14 +31,12 @@ To create an account and configure your local environment:
 2. Create an API key and secret (select "API Keys" on the left under "Settings")
 3. Create a `.env` file in the `townService` directory, setting the values as follows:
 
-| Config Value            | Description                                                                 |
-| ----------------------- | --------------------------------------------------------------------------- |
-| `TWILIO_ACCOUNT_SID`    | Visible on your twilio account dashboard.                                   |
-| `TWILIO_API_KEY_SID`    | The SID of the new API key you created.                                     |
-| `TWILIO_API_KEY_SECRET` | The secret for the API key you created.                                     |
-| `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard.                                   |
-| `SUPABASE_KEY`          | Contact a member of the team to get this secret, as it is project dependent |
-| `REQUEST_ORIGIN_URL`    | This is the regex of the url of the frontend. Defaults to localhost.        |
+| Config Value            | Description                               |
+| ----------------------- | ----------------------------------------- |
+| `TWILIO_ACCOUNT_SID`    | Visible on your twilio account dashboard. |
+| `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
+| `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
+| `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
 
 ### Starting the backend
 
@@ -47,13 +45,7 @@ The backend will automatically restart if you change any of the files in the `to
 
 ### Configuring the frontend
 
-Create a `.env` file in the `frontend` directory, with the following values. There is an example env file provided
-
-| Config Value                  | Description                                               |
-| ----------------------------- | --------------------------------------------------------- |
-| `REACT_APP_SUPABASE_ANON_KEY` | Same as Backend SUPABASE_KEY.                             |
-| `REACT_APP_SUPABASE_URL`      | The URL of the Supabase Service. Found on the Supabase UI |
-| `REACT_APP_TOWNS_SERVICE_URL` | The URL of the towns service. (http://localhost:8081)     |
+Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081` (if you deploy the towns service to another location, put that location here instead)
 
 ### Running the frontend
 
