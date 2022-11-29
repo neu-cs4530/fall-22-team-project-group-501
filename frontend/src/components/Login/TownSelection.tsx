@@ -80,12 +80,6 @@ export default function TownSelection(): JSX.Element {
     }
   }, [user, usersService]);
 
-  const logUser = useCallback(() => {
-    console.log(user);
-    console.log(currentUserTowns);
-    console.log(currentPublicTowns);
-  }, [user, currentUserTowns, currentPublicTowns]);
-
   /* --------------------- Default TownSelection Functions -------------------- */
   const updateTownListings = useCallback(() => {
     townsService.listTowns().then(towns => {
@@ -284,6 +278,11 @@ export default function TownSelection(): JSX.Element {
     },
     [setEditingTown, userName, toast, loginController],
   );
+
+  // Update currentUserTowns when editing town or settings are changed
+  useEffect(() => {
+    getUserTowns();
+  }, [getUserTowns, foundEditingTown, settings]);
 
   return (
     <>
