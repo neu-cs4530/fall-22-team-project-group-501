@@ -31,7 +31,7 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
-| `SUPABASE_KEY`          | The Supabase key is provided in the example env file |
+| `SUPABASE_KEY`          | Contact a member of the team to get this secret, as it is project dependent |
 | `REQUEST_ORIGIN_URL`    | This is the regex of the url of the frontend. Defaults to localhost.|
 
 
