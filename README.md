@@ -31,6 +31,9 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
+| `SUPABASE_KEY`          | The Supabase key is provided in the example env file |
+| `REQUEST_ORIGIN_URL`    | This is the regex of the url of the frontend. Defaults to localhost.|
+
 
 ### Starting the backend
 
@@ -39,7 +42,13 @@ The backend will automatically restart if you change any of the files in the `to
 
 ### Configuring the frontend
 
-Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081` (if you deploy the towns service to another location, put that location here instead)
+Create a `.env` file in the `frontend` directory, with the following values. There is an example env file provided
+
+| Config Value            | Description                               |
+| ----------------------- | ----------------------------------------- |
+| `REACT_APP_SUPABASE_ANON_KEY`    | Same as Backend SUPABASE_KEY. |
+| `REACT_APP_SUPABASE_URL`    | The URL of the Supabase Service. Found on the Supabase UI   |
+| `REACT_APP_TOWNS_SERVICE_URL` | The URL of the towns service. (http://localhost:8081)   |
 
 ### Running the frontend
 
