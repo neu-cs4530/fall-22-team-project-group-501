@@ -1,7 +1,6 @@
 import { ITiledMap } from '@jonbell/tiled-map-type-guard';
 import * as fs from 'fs/promises';
 import { customAlphabet } from 'nanoid';
-import UsersStore from 'src/profile/UsersStore';
 import Town from '../town/Town';
 import { TownEmitterFactory } from '../types/CoveyTownSocket';
 
