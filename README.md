@@ -2,7 +2,7 @@
 
 Covey.Town provides a virtual meeting space where different groups of people can have simultaneous video calls, allowing participants to drift between different conversations, just like in real life.
 Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/).
-You can view a deployment of the app [here](https://637578e25926c50008794ad7--coveytown-group501.netlify.app).
+You can view a deployment of the app [here](https://coveytown-group501.netlify.app/).
 
 ![Covey.Town Architecture](docs/covey-town-architecture.png)
 
@@ -40,7 +40,7 @@ To create an account and configure your local environment:
 
 ### Starting the backend
 
-Once your backend is configured, you can start it by running `npm run prestart` followed by `npm start` in the `townService` directory (the first time you run it, you will also need to run `npm install`).
+Once your backend is configured, you can start it by running `npm start` in the `townService` directory (the first time you run it, you will also need to run `npm install`).
 The backend will automatically restart if you change any of the files in the `townService/src` directory.
 
 ### Configuring the frontend
@@ -49,5 +49,5 @@ Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWN
 
 ### Running the frontend
 
-In the `frontend` directory, run `npm run prestart` followed by `npm start` (again, you'll need to run `npm install` the very first time). After several moments (or minutes, depending on the speed of your machine), a browser will open with the frontend running locally.
+In the `frontend` directory, run `npm start` (again, you'll need to run `npm install` the very first time). After several moments (or minutes, depending on the speed of your machine), a browser will open with the frontend running locally.
 The frontend will automatically re-compile and reload in your browser if you change any files in the `frontend/src` directory.
