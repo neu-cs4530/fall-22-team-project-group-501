@@ -2,7 +2,7 @@
 
 Covey.Town provides a virtual meeting space where different groups of people can have simultaneous video calls, allowing participants to drift between different conversations, just like in real life.
 Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/).
-You can view a deployment of the app [here](https://app.netlify.com/sites/coveytown-group501/overview).
+You can view a deployment of the app [here](https://637578e25926c50008794ad7--coveytown-group501.netlify.app).
 
 ![Covey.Town Architecture](docs/covey-town-architecture.png)
 
