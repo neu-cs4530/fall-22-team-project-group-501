@@ -1,8 +1,8 @@
 # Covey.Town
 
 Covey.Town provides a virtual meeting space where different groups of people can have simultaneous video calls, allowing participants to drift between different conversations, just like in real life.
-Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/), and is designed to be reused across semesters.
-You can view our reference deployment of the app at [app.covey.town](https://app.covey.town/), and our project showcase ([Spring 2022](https://neu-se.github.io/CS4530-Spring-2022/assignments/project-showcase), [Spring 2021](https://neu-se.github.io/CS4530-CS5500-Spring-2021/project-showcase)) highlight select student projects.
+Covey.Town was built for Northeastern's [Spring 2021 software engineering course](https://neu-se.github.io/CS4530-CS5500-Spring-2021/).
+You can view a deployment of the app [here](https://coveytown-group501.netlify.app/).
 
 ![Covey.Town Architecture](docs/covey-town-architecture.png)
 
@@ -11,6 +11,12 @@ The frontend client (in the `frontend` directory of this repository) uses the [P
 The frontend implements video chat using the [Twilio Programmable Video](https://www.twilio.com/docs/video) API, and that aspect of the interface relies heavily on [Twilio's React Starter App](https://github.com/twilio/twilio-video-app-react). Twilio's React Starter App is packaged and reused under the Apache License, 2.0.
 
 A backend service (in the `townService` directory) implements the application logic: tracking which "towns" are available to be joined, and the state of each of those towns.
+
+![OAuth Architecture](docs/oauth-architecture.png)
+
+We are using a 3rd party software to handle the middle handshake of Oauth, which means that the client only has to interact with Supabase and not the backend for authentication. This is mostly straightforward, as Supabase (The 3rd party PaaS) has some nice features to make this easy. However, keeping the information we need available outside of the secured auth database required setting up some triggers to duplicate new/updated rows in the auth table to our own “Users” table.
+
+This design allows us to both completely pass responsibility of security over to trusted 3rd parties, while also allowing us control over the information required by the backend.
 
 ## Running this app locally
 
